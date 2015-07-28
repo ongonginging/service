@@ -15,7 +15,7 @@ class ClientSocket{
         bool nonblocking;
     public:
         ClientSocket(void);
-        ClientSocket(bool reopen, bool nonblocking);
+        ClientSocket(bool nonblocking);
         ClientSocket(int fd);
         virtual ~ClientSocket(void);
         virtual int open(void);

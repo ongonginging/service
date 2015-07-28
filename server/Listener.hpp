@@ -11,7 +11,7 @@ using namespace std;
 
 class Listener{
     private:
-        std::auto_ptr<ServerSocket*> apServerSocket;
+        ServerSocket* pServerSocket;
     public:
         Listener(void);
         virtual ~Listener(void);

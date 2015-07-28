@@ -9,7 +9,7 @@
 
 class Dispatcher{
     private:
-        std::auto_ptr<Listener*> apListener;
+        Listener* pListener;
     public:
         void serve(void);
 };

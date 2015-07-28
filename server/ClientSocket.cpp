@@ -16,8 +16,8 @@ ClientSocket::ClientSocket(void){
     this->fd = -1;
 }
 
-ClientSocket::ClientSocket(bool reopen, bool nonblocking){
-    this->reopen = reopen;
+ClientSocket::ClientSocket(bool nonblocking){
+    this->reopen = false;
     this->nonblocking = nonblocking;
     this->fd = -1;
 }
