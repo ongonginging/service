@@ -11,7 +11,7 @@ class Dispatcher{
     private:
         std::auto_ptr<Listener*> apListener;
     public:
-        void service(void);
+        void serve(void);
 };
 
 #endif //__DISPATCHER_HPP__

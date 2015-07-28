@@ -6,7 +6,7 @@
 #include"Dispatcher.hpp"
 #include"Listener.hpp"
 
-void Dispatcher::service(void){
+void Dispatcher::serve(void){
     while(true){
         std::cout<<"in dispatcher."<<std::endl;
         sleep(1000);
