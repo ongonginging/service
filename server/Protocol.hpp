@@ -1,4 +1,7 @@
 
+#ifndef __PROTOCOL_HPP__
+#define __PROTOCOL_HPP__
+
 #include "IProtocol.hpp"
 #include <iostream>
 
@@ -27,3 +30,4 @@ class Protocol:public IProtocol{
         bool read( const char*& input_buffer);
 };
 
+#endif //__PROTOCOL_HPP__

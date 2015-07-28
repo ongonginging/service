@@ -3,15 +3,18 @@
 #define __LISTENER_H__
 
 #include<iostream>
+#include<memory>
+
+#include"ServerSocket.hpp"
+
+using namespace std;
 
 class Listener{
     private:
-        bool nonblocking;
-        bool reuseAddr;
-        int backLog;
-        int port;
-        std::string host;
+        std::auto_ptr<ServerSocket*> apServerSocket;
     public:
+        Listener(void);
+        virtual ~Listener(void);
         virtual void serve(void);
 };
 

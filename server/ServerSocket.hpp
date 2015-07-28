@@ -11,6 +11,7 @@ class ServerSocket{
         int port;
         std::string host;
         bool nonblocking;
+        bool reuse;
     public:
         ServerSocket(const int& port, const std::string& host, const int& backlog, const bool& nonblocking);
         ServerSocket(void);

@@ -16,6 +16,7 @@ ServerSocket::ServerSocket(void){
     this->port = 9544;
     this->host = "127.0.0.1";
     this->nonblocking = false;
+    this->reuse = true;
 }
 
 ServerSocket::ServerSocket(const int& port, const std::string& host, const int& backlog, const bool& nonblocking){
@@ -24,6 +25,7 @@ ServerSocket::ServerSocket(const int& port, const std::string& host, const int& 
     this->host = host;
     this->backlog = backlog;
     this->nonblocking = nonblocking;
+    this->reuse = true;
 }
 
 ServerSocket::~ServerSocket(void){

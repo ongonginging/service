@@ -1,14 +1,17 @@
 
+#ifndef __DISPATCHER_HPP__
+#define __DISPATCHER_HPP__
+
 #include<iostream>
+#include<memory>
 
 #include"Listener.hpp"
 
-//#include<auto_ptr.h>
-
 class Dispatcher{
     private:
-        //std::auto_ptr<Listener> pListener;
-        Listener* pListener;
+        std::auto_ptr<Listener*> apListener;
     public:
         void service(void);
 };
+
+#endif //__DISPATCHER_HPP__

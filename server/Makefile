@@ -1,13 +1,11 @@
 
-TARGET=connector
+TARGET=service
 ROOT_DIR=$(shell pwd)
-COMMON_DIR=$(ROOT_DIR)/common
 ifeq ($(debug), y)
 	CPPFLAGS=-std=c++11 -gdwarf-2 -DDEBUG -DNO_FCGI_DEFINES -DBOOST_LOG_DYN_LINK -Werror -O0 #-pg
 else
 	CPPFLAGS=-std=c++11 -gdwarf-2 -DNO_FCGI_DEFINES -DBOOST_LOG_DYN_LINK -Werror -O0 #-pg
 endif
-#CXX=/opt/rh/devtoolset-2/root/usr/bin/g++
 
 DEP_LIBS=-lpthread\
 	-lhiredis\
@@ -35,14 +33,15 @@ DEP_INCS=-I.\
 DIRS=$(shell find . -maxdepth 3 -type d)
 FILES=$(foreach dir,$(DIRS),$(wildcard $(dir)/*.cpp))
 OBJS=$(patsubst %.cpp,%.o, $(FILES))
+HPPS=$(foreach dir,$(DIRS),$(wildcard $(dir)/*.hpp))
 
 VPATH = .
 .cpp.o:
-	$(CXX) -c $(CPPFLAGS) $< -o $@ $(DeP_LIBS) $(DEP_INCS) 
+	$(CXX) -c $(CPPFLAGS) $< -o $@ $(DEP_LIBS) $(DEP_INCS) 
 
 all: $(TARGET)
 
-$(TARGET): $(OBJS)
+$(TARGET): $(OBJS) $(HPPS)
 	$(CXX)  -o $@ $(OBJS) $(CPPFLAGS) $(DEP_LIBS) $(DEP_INCS)
 
 clean:
