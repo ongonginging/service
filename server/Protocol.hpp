@@ -1,5 +1,5 @@
 
-#include "iproto.h"
+#include "IProtocol.hpp"
 #include <iostream>
 
 class Header{

@@ -41,10 +41,6 @@ ClientSocket::ClientSocket(int fd){
 }
 
 ClientSocket::~ClientSocket(void){
-    int rv = 0;
-    if(this->fd < 0){
-        std::cout<<__func__<<"fd(client socket)<0."<<std::endl;
-    }
 }
 
 int ClientSocket::open(void){
@@ -89,6 +85,8 @@ int ClientSocket::close(void){
         if (result == -1){
             std::cout<<__func__<<" there is something wrong when closing socket "<<this->fd<<". errno = "<<result<<std::endl;
             rv = -1;
+        }else{
+            this->fd = -1;
         }
     }else{
         std::cout<<__func__<<" we would not close client socket. fd<0."<<std::endl;

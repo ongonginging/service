@@ -1,13 +1,23 @@
 
+#ifndef __SERVERSOCKET_HPP__
+#define __SERVERSOCKET_HPP__
+
+#include<iostream>
+
 class ServerSocket{
     private:
-        int listenfd;
+        int fd;
+        int backlog;
+        int port;
+        std::string host;
         bool nonblocking;
     public:
+        ServerSocket(const int& port, const std::string& host, const int& backlog, const bool& nonblocking);
         ServerSocket(void);
-        ServerSocket(bool nonblocking);
-        ~serverSocket(void);
+        virtual ~ServerSocket(void);
         virtual int open(void);
         virtual int close(void);
-        virtual int serve(void);
+        virtual void serve(void);
 };
+
+#endif //__SERVERSOCKET_HPP__
