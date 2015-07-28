@@ -3,9 +3,12 @@
 #include<errno.h>
 #include<unistd.h>
 
+#include<fcntl.h>
 #include<sys/types.h>
 #include<sys/stat.h>
 #include<sys/socket.h>
+
+#include"ClientSocket.hpp"
 
 ClientSocket::ClientSocket(void){
     this->reopen = false;
@@ -30,7 +33,7 @@ ClientSocket::ClientSocket(int fd){
         if (result == -1){
             std::cout<<__func__<<" set nonblocking to client socket "<<this->fd<<" failed. errno = "<<errno<<std::endl;
         }else{
-            this->nonblocking = (&O_NONBLOCK)>0?true:false; 
+            this->nonblocking = (result&O_NONBLOCK)>0?true:false; 
         }
     }else{
         std::cout<<__func__<<" fd(client socket)<0."<<std::endl;
@@ -49,14 +52,14 @@ int ClientSocket::open(void){
     if(this->fd >= 0){
         std::cout<<__func__<<" fd>0 when openning socket."<<std::endl;
         if (reopen){
-            std::cout<<<__func__<<" we intent to close current fd "<<this->fd<<" and create new one."<<std::endl;
+            std::cout<<__func__<<" we intent to close current fd "<<this->fd<<" and create new one."<<std::endl;
             int result = this->close();
             if (result == -1){
                 rv = -1;
                 return rv;
             } 
         }else{
-            std::cout<<<__func__<<" we intent to reuse current fd "<<this->fd<<"."<<std::endl;
+            std::cout<<__func__<<" we intent to reuse current fd "<<this->fd<<"."<<std::endl;
         }
     }
     int fd = -1;
@@ -94,10 +97,8 @@ int ClientSocket::close(void){
     return rv;
 }
 
-int ClientSocket::read(const char* input_buffer){
-
+int ClientSocket::read(const char*& input_buffer){
 }
 
-int ClientSocket::write(const char* outup_buffer){
-
+int ClientSocket::write(const char*& outup_buffer, const int& length){
 }

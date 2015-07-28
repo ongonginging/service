@@ -1,5 +1,5 @@
 
-#include"proto.h"
+#include"Protocol.hpp"
 
 int& Header::read_length(void){
     return this->length;

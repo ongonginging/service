@@ -17,6 +17,6 @@ class ClientSocket{
         ~ClientSocket(void);
         virtual int open(void);
         virtual int close(void);
-        virtual int read(const char* input_buffer);
-        virtual int write(const char* outup_buffer);
+        virtual int read(const char*& input_buffer);
+        virtual int write(const char*& outup_buffer, const int& length);
 };
