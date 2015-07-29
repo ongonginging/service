@@ -11,18 +11,21 @@
 #include"ClientSocket.hpp"
 
 ClientSocket::ClientSocket(void){
+    std::cout<<__func__<<std::endl;
     this->reopen = false;
     this->nonblocking = false;
     this->fd = -1;
 }
 
 ClientSocket::ClientSocket(bool nonblocking){
+    std::cout<<__func__<<std::endl;
     this->reopen = false;
     this->nonblocking = nonblocking;
     this->fd = -1;
 }
 
 ClientSocket::ClientSocket(int fd){
+    std::cout<<__func__<<std::endl;
     this->fd = -1;
     int result = 0;
     if(fd >= 0){
@@ -41,9 +44,11 @@ ClientSocket::ClientSocket(int fd){
 }
 
 ClientSocket::~ClientSocket(void){
+    std::cout<<__func__<<std::endl;
 }
 
 int ClientSocket::open(void){
+    std::cout<<__func__<<std::endl;
     int rv = 0;
     if(this->fd >= 0){
         std::cout<<__func__<<" fd>0 when openning socket."<<std::endl;
@@ -78,6 +83,7 @@ int ClientSocket::open(void){
 }
 
 int ClientSocket::close(void){
+    std::cout<<__func__<<std::endl;
     int rv = 0;
     int result = -1;
     if(this->fd>=0){
@@ -96,7 +102,9 @@ int ClientSocket::close(void){
 }
 
 int ClientSocket::read(const char*& input_buffer){
+    std::cout<<__func__<<std::endl;
 }
 
 int ClientSocket::write(const char*& outup_buffer, const int& length){
+    std::cout<<__func__<<std::endl;
 }

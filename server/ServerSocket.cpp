@@ -11,6 +11,7 @@
 #include"ServerSocket.hpp"
 
 ServerSocket::ServerSocket(void){
+    std::cout<<__func__<<std::endl;
     this->fd = -1;
     this->backlog = 1024;
     this->port = 9544;
@@ -20,6 +21,7 @@ ServerSocket::ServerSocket(void){
 }
 
 ServerSocket::ServerSocket(const int& port, const std::string& host, const int& backlog, const bool& nonblocking){
+    std::cout<<__func__<<std::endl;
     this->fd = -1;
     this->port = port;
     this->host = host;
@@ -29,10 +31,12 @@ ServerSocket::ServerSocket(const int& port, const std::string& host, const int& 
 }
 
 ServerSocket::~ServerSocket(void){
+    std::cout<<__func__<<std::endl;
     std::cout<<__func__<<" fd = "<<this->fd<<std::endl;
 }
 
 int ServerSocket::open(void){
+    std::cout<<__func__<<std::endl;
     int rv = 0;
     if(this->fd >= 0){
         std::cout<<__func__<<" fd>0 when openning socket."<<std::endl;
@@ -62,6 +66,7 @@ int ServerSocket::open(void){
 }
 
 int ServerSocket::close(void){
+    std::cout<<__func__<<std::endl;
     int rv = 0;
     int result = -1;
     if(this->fd>=0){
@@ -80,6 +85,6 @@ int ServerSocket::close(void){
 }
 
 void ServerSocket::serve(void){
-
+    std::cout<<__func__<<std::endl;
 }
 
