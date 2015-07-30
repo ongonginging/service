@@ -21,7 +21,7 @@ class Body{
         void write_data(const std::string& data);
 };
 
-class Protocol:public IProtocol{
+class Protocol{//:public IProtocol{
     private:
         Header header;
         Body body;

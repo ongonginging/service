@@ -10,7 +10,7 @@
 
 class ClientSocket{
     private:
-        int fd;
+        int  fd;
         bool reopen;
         bool nonblocking;
     public:

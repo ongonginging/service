@@ -1,6 +1,6 @@
 
-#ifndef __LISTENER_H__
-#define __LISTENER_H__
+#ifndef __LISTENER_HPP__
+#define __LISTENER_HPP__
 
 #include<iostream>
 
@@ -11,7 +11,7 @@
 
 class Listener{
     private:
-        boost::shared_ptr<Configure> wpConfigure;
+        boost::shared_ptr<Configure> spConfigure;
         boost::shared_ptr<ServerSocket> spServerSocket;
     public:
         Listener(void);
@@ -19,4 +19,4 @@ class Listener{
         virtual void serve(void);
 };
 
-#endif //__LISTENER_H__
+#endif //__LISTENER_HPP__
