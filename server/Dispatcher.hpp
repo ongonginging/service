@@ -3,13 +3,17 @@
 #define __DISPATCHER_HPP__
 
 #include<iostream>
-#include<memory>
+
+#include<boost/shared_ptr.hpp>
+#include<boost/weak_ptr.hpp>
 
 #include"Listener.hpp"
+#include"Configure.hpp"
 
 class Dispatcher{
     private:
-        std::auto_ptr<Listener> pListener;
+        boost::shared_ptr<Configure> spConfigure;
+        boost::shared_ptr<Listener> spListener;
     public:
         void serve(void);
 };

@@ -3,15 +3,16 @@
 #define __LISTENER_H__
 
 #include<iostream>
-#include<memory>
 
+#include <boost/shared_ptr.hpp>
+
+#include"Configure.hpp"
 #include"ServerSocket.hpp"
-
-using namespace std;
 
 class Listener{
     private:
-        std::auto_ptr<ServerSocket> apServerSocket;
+        boost::shared_ptr<Configure> wpConfigure;
+        boost::shared_ptr<ServerSocket> spServerSocket;
     public:
         Listener(void);
         virtual ~Listener(void);
