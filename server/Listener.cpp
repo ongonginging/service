@@ -1,20 +1,58 @@
 
-#include "Listener.hpp"
+
+#include<boost/lexical_cast.hpp>
+
+#include"Listener.hpp"
+#include"ServerSocket.hpp"
+#include"ClientSocket.hpp"
+#include"Configure.hpp"
+
+#include<unistd.h>
 
 Listener::Listener(){
-
 }
 
-Listener::Listener(const boost::shared_ptr<Configure>& spConfigure, const boost::shared_ptr<ServerSocket>& spServerSocket){
+Listener::Listener(const boost::shared_ptr<Configure>& spConfigure){
+
     this->spConfigure = spConfigure;
-    this->spServerSocket = spServerSocket;
+
+    int backlog;
+    int port;
+    std::string host;
+
+    std::string tmp;
+    bool result = false;
+    result = this->spConfigure->get("backlog", tmp);
+    if(result){
+        backlog = boost::lexical_cast<int>(tmp);
+    }
+    result = this->spConfigure->get("port", tmp);
+    if(result){
+        port = boost::lexical_cast<int>(tmp);
+    } 
+    result = this->spConfigure->get("host", tmp);
+    if(result){
+        host = tmp;
+    } 
+
+    boost::shared_ptr<ServerSocket>ss(new ServerSocket(port, host, backlog));
+    this->spServerSocket = ss;
 }
 
 Listener::~Listener(){
 
 }
 
-void Listener::serve(void){
+void Listener::start(){
+    this->spServerSocket->open();
+}
+
+void Listener::serve(){
+    this->spServerSocket->accept();
+}
+
+void Listener::stop(){
+    ClientSocket cs = this->spServerSocket->close();
 }
 
 

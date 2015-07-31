@@ -3,6 +3,8 @@
 #include <boost/shared_ptr.hpp>
 
 #include"Configure.hpp"
+#include"ServerSocket.hpp"
+#include"Listener.hpp"
 
 int main(int argc, char* argv[]){
     int rv = 0;

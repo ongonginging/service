@@ -14,10 +14,12 @@ class Listener{
         boost::shared_ptr<Configure> spConfigure;
         boost::shared_ptr<ServerSocket> spServerSocket;
     public:
-        Listener(void);
-        Listener(const boost::shared_ptr<Configure>& spConfigure, const boost::shared_ptr<ServerSocket>& spServerSocket);
-        ~Listener(void);
-        void serve(void);
+        Listener();
+        Listener(const boost::shared_ptr<Configure>& spConfigure);
+        ~Listener();
+        void start();
+        void serve();
+        void stop();
 };
 
 #endif //__LISTENER_HPP__

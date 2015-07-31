@@ -2,13 +2,17 @@
 #include<iostream>
 #include<errno.h>
 #include<unistd.h>
+#include<string.h>
 
 #include<fcntl.h>
 #include<sys/types.h>
 #include<sys/stat.h>
 #include<sys/socket.h>
+#include<netinet/in.h>
+#include<arpa/inet.h>
 
 #include"ServerSocket.hpp"
+#include"ClientSocket.hpp"
 
 ServerSocket::ServerSocket(void){
     std::cout<<__func__<<std::endl;
@@ -16,17 +20,17 @@ ServerSocket::ServerSocket(void){
     this->backlog = 1024;
     this->port = 9544;
     this->host = "127.0.0.1";
-    this->nonblocking = false;
+    this->nonblocking = true;
     this->reuse = true;
 }
 
-ServerSocket::ServerSocket(const int& port, const std::string& host, const int& backlog, const bool& nonblocking){
+ServerSocket::ServerSocket(const int& port, const std::string& host, const int& backlog){
     std::cout<<__func__<<std::endl;
     this->fd = -1;
     this->port = port;
     this->host = host;
     this->backlog = backlog;
-    this->nonblocking = nonblocking;
+    this->nonblocking = true;
     this->reuse = true;
 }
 
@@ -84,7 +88,21 @@ int ServerSocket::close(void){
     return rv;
 }
 
-void ServerSocket::serve(void){
+ClientSocket ServerSocket::accept(void){
     std::cout<<__func__<<std::endl;
+    ClientSocket cs;
+    int& port = cs.getPort();
+    int& fd = cs.getFd();
+    std::string& host = cs.getHost();
+    struct sockaddr& addr = cs.getAddr();
+    struct sockaddr_in& inaddr = cs.getInaddr();
+    socklen_t socklen = sizeof(addr);
+    fd = ::accept(this->fd, &addr, &socklen);
+    if (fd>0){
+        memcpy(&inaddr, &addr, sizeof(inaddr));
+        host = inet_ntoa(inaddr.sin_addr);
+        port = inaddr.sin_port;
+    }
+    return cs;
 }
 

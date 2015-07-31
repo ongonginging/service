@@ -4,6 +4,8 @@
 
 #include<iostream>
 
+#include"ClientSocket.hpp"
+
 class ServerSocket{
     private:
         int fd;
@@ -13,12 +15,12 @@ class ServerSocket{
         bool nonblocking;
         bool reuse;
     public:
-        ServerSocket(const int& port, const std::string& host, const int& backlog, const bool& nonblocking);
+        ServerSocket(const int& port, const std::string& host, const int& backlog);
         ServerSocket(void);
-        virtual ~ServerSocket(void);
-        virtual int open(void);
-        virtual int close(void);
-        virtual void serve(void);
+        ~ServerSocket(void);
+        int open(void);
+        int close(void);
+        ClientSocket accept(void);
 };
 
 #endif //__SERVERSOCKET_HPP__

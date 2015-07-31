@@ -8,6 +8,9 @@
 #include<sys/stat.h>
 #include<sys/socket.h>
 
+#include<netinet/in.h>
+#include<arpa/inet.h>
+
 #include"ClientSocket.hpp"
 
 ClientSocket::ClientSocket(void){
@@ -101,10 +104,34 @@ int ClientSocket::close(void){
     return rv;
 }
 
+int& ClientSocket::getPort(){
+    return this->port;
+}
+
+std::string& ClientSocket::getHost(){
+    return this->host;
+}
+
+int& ClientSocket::getFd(){
+    return this->fd;
+}
+
+struct sockaddr& ClientSocket::getAddr(){
+    return this->addr;
+}
+
+struct sockaddr_in& ClientSocket::getInaddr(){
+    return this->inaddr;
+}
+
 int ClientSocket::read(const char*& input_buffer){
     std::cout<<__func__<<std::endl;
 }
 
 int ClientSocket::write(const char*& outup_buffer, const int& length){
     std::cout<<__func__<<std::endl;
+}
+
+std::string ClientSocket::toString(){
+    std::cout<<"{ClientSocket:"<<this<<", fd:"<<this->fd<<", nonblocking:"<<this->nonblocking<<", reopen:"<<this->reopen<<", host:"<<this->host<<", port:"<<this->port<<"}"<<std::endl;
 }
