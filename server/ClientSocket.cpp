@@ -16,14 +16,6 @@
 ClientSocket::ClientSocket(void){
     std::cout<<__func__<<" default constructor."<<std::endl;
     this->reopen = false;
-    this->nonblocking = false;
-    this->fd = -1;
-}
-
-ClientSocket::ClientSocket(bool nonblocking){
-    std::cout<<__func__<<" customer(bool nonblocking) constructor."<<std::endl;
-    this->reopen = false;
-    this->nonblocking = nonblocking;
     this->fd = -1;
 }
 
@@ -34,7 +26,6 @@ ClientSocket::ClientSocket(int fd){
     if(fd >= 0){
         this->fd = fd;
         this->reopen = false;
-        this->nonblocking = false;
         result = fcntl(this->fd, F_GETFL);
         if (result == -1){
             std::cout<<__func__<<" set nonblocking to client socket "<<this->fd<<" failed. errno = "<<errno<<std::endl;
@@ -104,28 +95,117 @@ int ClientSocket::close(void){
     return rv;
 }
 
-int& ClientSocket::getPort(){
-    return this->port;
-}
-
-std::string& ClientSocket::getHost(){
-    return this->host;
-}
-
-int& ClientSocket::getFd(){
-    return this->fd;
-}
-
-socklen_t& ClientSocket::getSocklen(){
+socklen_t ClientSocket::getSocklen(){
     return this->socklen;
 }
+void ClientSocket::setSocklen(const socklen_t& socklen){
+    this->socklen = socklen;
+}
 
-struct sockaddr& ClientSocket::getAddr(){
+struct sockaddr ClientSocket::getAddr(){
     return this->addr;
 }
 
-struct sockaddr_in& ClientSocket::getInaddr(){
+void ClientSocket::setAddr(const struct sockaddr& addr){
+    this->addr = addr;
+}
+
+struct sockaddr_in ClientSocket::getInaddr(){
     return this->inaddr;
+}
+
+void ClientSocket::setInaddr(const struct sockaddr_in& inaddr){
+    this->inaddr = inaddr;
+}
+
+int ClientSocket::getFd(){
+    return this->fd;
+}
+
+void ClientSocket::setFd(const int& fd){
+    this->fd = fd;
+}
+
+int ClientSocket::getPort(){
+    return this->port;
+}
+
+void ClientSocket::setPort(const int& port){
+    this->port = port;
+}
+
+std::string ClientSocket::getHost(){
+    return this->host;
+}
+
+void ClientSocket::setHost(const std::string& host){
+    this->host = host;
+}
+
+bool ClientSocket::getReuse(){
+    return this->reuse;
+}
+
+void ClientSocket::setReuse(bool reuse){
+    this->reuse = reuse;
+}
+
+bool ClientSocket::getNonblocking(){
+    return this->nonblocking;
+}
+
+void ClientSocket::setNonblocking(bool nonblocking){
+    this->nonblocking = nonblocking;
+}
+
+int ClientSocket::getSendBufferSize(){
+    return this->sendBufferSize;
+}
+
+void ClientSocket::setSendBufferSize(const int& sendBufferSize){
+    this->sendBufferSize = sendBufferSize;
+}
+
+int ClientSocket::getRecvBufferSize(){
+    return this->recvBufferSize;
+}
+
+void ClientSocket::setRecvBufferSize(const int& recvBufferSize){
+    this->recvBufferSize = recvBufferSize;
+}
+
+int ClientSocket::getSendTimeout(){
+    return this->sendTimeout; 
+}
+
+void ClientSocket::setSendTimeout(const int& sendTimeout){
+    this->sendTimeout = sendTimeout;
+}
+
+int ClientSocket::getRecvTimeout(){
+    return this->recvTimeout;
+}
+
+void ClientSocket::setRecvTimeout(const int& recvTimeout){
+    this->recvTimeout = recvTimeout;
+}
+
+int ClientSocket::getConnTimeout(){
+    return this->connTimeout;
+}
+
+void ClientSocket::setConnTimeout(const int& connTimeout){
+    this->connTimeout = connTimeout;
+}
+
+struct linger ClientSocket::getLinger(){
+    return this->soLinger;
+    //todo: getsockopt
+}
+
+void ClientSocket::setLinger(const struct linger& soLinger){
+    this->soLinger = soLinger;
+    //todo: setsockopt
 }
 
 int ClientSocket::read(const char*& input_buffer){

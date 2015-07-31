@@ -34,7 +34,7 @@ Listener::Listener(const boost::shared_ptr<Configure>& spConfigure){
         host = tmp;
     } 
 
-    boost::shared_ptr<ServerSocket>ss(new ServerSocket(port, host, backlog));
+    boost::shared_ptr<ServerSocket> ss(new ServerSocket(port, host, backlog));
     this->spServerSocket = ss;
 }
 
@@ -43,7 +43,7 @@ Listener::~Listener(){
 }
 
 void Listener::start(){
-    this->spServerSocket->open();
+    int rv = this->spServerSocket->open();
 }
 
 void Listener::serve(){
@@ -55,7 +55,7 @@ void Listener::serve(){
 }
 
 void Listener::stop(){
-    ClientSocket cs = this->spServerSocket->close();
+    int rv = this->spServerSocket->close();
 }
 
 
