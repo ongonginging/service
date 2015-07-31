@@ -11,17 +11,27 @@
 
 class ClientSocket{
     private:
-        int  fd;
+        socklen_t socklen;
         struct sockaddr addr;
         struct sockaddr_in inaddr;
+        int  fd;
         int port;
         std::string host;
         bool reopen;
+        bool reuse;
         bool nonblocking;
+        bool keepAlive;
+        int connTimeout;
+        int sendTimeout;
+        int recvTimeout;
+        int sendBuffer;
+        int recvBuffer;
+        struct linger;
     public:
         ClientSocket(void);
         ClientSocket(bool nonblocking);
         ClientSocket(int fd);
+        socklen_t& getSocklen();
         struct sockaddr& getAddr();
         struct sockaddr_in& getInaddr();
         int& getFd();

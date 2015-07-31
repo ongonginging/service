@@ -88,21 +88,23 @@ int ServerSocket::close(void){
     return rv;
 }
 
-ClientSocket ServerSocket::accept(void){
+bool ServerSocket::accept(ClientSocket& cs){
     std::cout<<__func__<<std::endl;
-    ClientSocket cs;
+    bool rv = false;
     int& port = cs.getPort();
     int& fd = cs.getFd();
     std::string& host = cs.getHost();
     struct sockaddr& addr = cs.getAddr();
     struct sockaddr_in& inaddr = cs.getInaddr();
-    socklen_t socklen = sizeof(addr);
+    socklen_t& socklen = cs.getSocklen();
+    socklen = sizeof(addr);
     fd = ::accept(this->fd, &addr, &socklen);
     if (fd>0){
         memcpy(&inaddr, &addr, sizeof(inaddr));
         host = inet_ntoa(inaddr.sin_addr);
         port = inaddr.sin_port;
+        rv = true;
     }
-    return cs;
+    return rv;
 }
 

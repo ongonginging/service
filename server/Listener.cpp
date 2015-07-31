@@ -1,4 +1,5 @@
 
+#include<unistd.h>
 
 #include<boost/lexical_cast.hpp>
 
@@ -6,8 +7,6 @@
 #include"ServerSocket.hpp"
 #include"ClientSocket.hpp"
 #include"Configure.hpp"
-
-#include<unistd.h>
 
 Listener::Listener(){
 }
@@ -48,7 +47,11 @@ void Listener::start(){
 }
 
 void Listener::serve(){
-    this->spServerSocket->accept();
+    bool result = true;
+    while(result){
+        ClientSocket cs;
+        result = this->spServerSocket->accept(cs);
+    }
 }
 
 void Listener::stop(){

@@ -116,6 +116,10 @@ int& ClientSocket::getFd(){
     return this->fd;
 }
 
+socklen_t& ClientSocket::getSocklen(){
+    return this->socklen;
+}
+
 struct sockaddr& ClientSocket::getAddr(){
     return this->addr;
 }
