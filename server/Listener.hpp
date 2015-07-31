@@ -15,8 +15,9 @@ class Listener{
         boost::shared_ptr<ServerSocket> spServerSocket;
     public:
         Listener(void);
-        virtual ~Listener(void);
-        virtual void serve(void);
+        Listener(const boost::shared_ptr<Configure>& spConfigure, const boost::shared_ptr<ServerSocket>& spServerSocket);
+        ~Listener(void);
+        void serve(void);
 };
 
 #endif //__LISTENER_HPP__

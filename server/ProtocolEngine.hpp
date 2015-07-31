@@ -30,7 +30,7 @@ class ProtocolEngine{
         ProtocolEngine();
         ~ProtocolEngine();
         int enter(int fd, int event);
-        int entry(int fd, int event);
+        int run(int fd, int event);
         int leave(int fd, int event);
 };
 
