@@ -17,7 +17,7 @@ class Configure{
         virtual ~Configure();
 #endif
         void set(const std::string& key, const std::string& value);
-        std::string& get(const std::string& key);
+        bool get(const std::string& key, std::string& value);
 };
 
 class Test:public Configure{

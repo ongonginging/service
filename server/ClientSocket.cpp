@@ -11,21 +11,21 @@
 #include"ClientSocket.hpp"
 
 ClientSocket::ClientSocket(void){
-    std::cout<<__func__<<std::endl;
+    std::cout<<__func__<<" default constructor."<<std::endl;
     this->reopen = false;
     this->nonblocking = false;
     this->fd = -1;
 }
 
 ClientSocket::ClientSocket(bool nonblocking){
-    std::cout<<__func__<<std::endl;
+    std::cout<<__func__<<" customer(bool nonblocking) constructor."<<std::endl;
     this->reopen = false;
     this->nonblocking = nonblocking;
     this->fd = -1;
 }
 
 ClientSocket::ClientSocket(int fd){
-    std::cout<<__func__<<std::endl;
+    std::cout<<__func__<<" customer(int fd) constuctor."<<std::endl;
     this->fd = -1;
     int result = 0;
     if(fd >= 0){
@@ -44,7 +44,7 @@ ClientSocket::ClientSocket(int fd){
 }
 
 ClientSocket::~ClientSocket(void){
-    std::cout<<__func__<<std::endl;
+    std::cout<<__func__<<" default destructor."<<std::endl;
 }
 
 int ClientSocket::open(void){
