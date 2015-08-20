@@ -146,7 +146,7 @@ bool ClientSocket::getReuse(){
     return this->reuse;
 }
 
-void ClientSocket::setReuse(bool reuse){
+void ClientSocket::setReuse(const bool& reuse){
     this->reuse = reuse;
 }
 
@@ -154,8 +154,16 @@ bool ClientSocket::getNonblocking(){
     return this->nonblocking;
 }
 
-void ClientSocket::setNonblocking(bool nonblocking){
+void ClientSocket::setNonblocking(const bool& nonblocking){
     this->nonblocking = nonblocking;
+}
+
+bool ClientSocket::getNodelay(){
+    return this->nodelay;
+}
+
+void ClientSocket::setNodelay(const bool& nodelay){
+    this->nodelay = nodelay;
 }
 
 int ClientSocket::getSendBufferSize(){

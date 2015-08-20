@@ -24,6 +24,7 @@ class ClientSocket{
         bool reuse;
         bool nonblocking;
         bool keepAlive;
+        bool nodelay;
         int connTimeout;
         int sendTimeout;
         int recvTimeout;
@@ -55,10 +56,13 @@ class ClientSocket{
         void setHost(const std::string& host);
 
         bool getReuse();
-        void setReuse(bool reuse);
+        void setReuse(const bool& reuse);
 
         bool getNonblocking();
-        void setNonblocking(bool nonblocking);
+        void setNonblocking(const bool& nonblocking);
+
+        bool getNodelay();
+        void setNodelay(const bool& nodelay);
 
         int getSendBufferSize();
         void setSendBufferSize(const int& sendBufferSize);

@@ -99,6 +99,7 @@ bool ServerSocket::accept(ClientSocket& cs){
     socklen_t socklen = sizeof(addr);
     fd = ::accept(this->fd, &addr, &socklen);
     if (fd>0){
+        rv = true;
         memcpy(&inaddr, &addr, sizeof(inaddr));
         host = inet_ntoa(inaddr.sin_addr);
         port = inaddr.sin_port;
@@ -107,8 +108,15 @@ bool ServerSocket::accept(ClientSocket& cs){
         cs.setHost(host);
         cs.setAddr(addr);
         cs.setInaddr(inaddr);
-        cs.setNonblocking(true);
-        rv = true;
+        if(this->reuse){
+            cs.setReuse(true);
+        }
+        if(this->nodelay){
+            cs.setNodelay(true);
+        }
+        if(this->nonblocking){
+            cs.setNonblocking(true);
+        }
     }
     return rv;
 }

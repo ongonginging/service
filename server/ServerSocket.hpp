@@ -14,12 +14,14 @@ class ServerSocket{
         std::string host;
         bool reuse;
         bool keepAlive;
+        bool nonblocking;
+        bool nodelay;
         int connTimeout;
         int sendTimeout;
         int recvTimeout;
         int sendBuffer;
         int recvBuffer;
-        struct linger;
+        struct linger soLinger;
     public:
         ServerSocket(const int& port, const std::string& host, const int& backlog);
         ServerSocket(void);
