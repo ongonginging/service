@@ -166,6 +166,15 @@ void ClientSocket::setNodelay(const bool& nodelay){
     this->nodelay = nodelay;
 }
 
+
+bool ClientSocket::getKeepalive(){
+    return this->keepalive;
+}
+
+void ClientSocket::setKeepalive(const bool& keepalive){
+    this->keepalive = keepalive;
+}
+
 int ClientSocket::getSendBufferSize(){
     return this->sendBufferSize;
 }

@@ -117,6 +117,9 @@ bool ServerSocket::accept(ClientSocket& cs){
         if(this->nonblocking){
             cs.setNonblocking(true);
         }
+        if(this->keepalive){
+            cs.setKeepalive(true);
+        }
     }
     return rv;
 }

@@ -13,7 +13,7 @@ class ServerSocket{
         int port;
         std::string host;
         bool reuse;
-        bool keepAlive;
+        bool keepalive;
         bool nonblocking;
         bool nodelay;
         int connTimeout;

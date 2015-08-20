@@ -23,7 +23,7 @@ class ClientSocket{
 
         bool reuse;
         bool nonblocking;
-        bool keepAlive;
+        bool keepalive;
         bool nodelay;
         int connTimeout;
         int sendTimeout;
@@ -63,6 +63,9 @@ class ClientSocket{
 
         bool getNodelay();
         void setNodelay(const bool& nodelay);
+
+        bool getKeepalive();
+        void setKeepalive(const bool& keepalive);
 
         int getSendBufferSize();
         void setSendBufferSize(const int& sendBufferSize);
