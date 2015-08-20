@@ -53,18 +53,51 @@ int ServerSocket::open(void){
         std::cout<<__func__<<" exception information: "<<e.what()<<std::endl;
     }
     if(fd == -1){
-        std::cout<<__func__<<" created client socket failed. errno = "<<errno<<std::endl;
-        return -1;
+        std::cout<<__func__<<" created listen socket failed. errno = "<<errno<<std::endl;
+        rv = -1;
+        return rv;
     }else{
         this->fd = fd; 
-        std::cout<<__func__<<" successful created client socket "<<this->fd;
+        std::cout<<__func__<<" successful created listen socket "<<this->fd;
+    }
+    if(this->reuse){
+        int flag = 1;
+        int result = setsockopt(this->fd, SOL_SOCKET, SO_REUSEADDR, &flag, sizeof(flag));
+        if (result == -1){
+            std::cout<<__func__<<" set reuseaddr to listen socket "<<this->fd<<" failed. errno = "<<errno<<std::endl;
+            rv = -1;
+            return rv;
+        }
     }
     if(this->nonblocking){
         int result = fcntl(this->fd, F_SETFL, O_NONBLOCK|fcntl(this->fd, F_GETFL));
         if (result == -1){
-            std::cout<<__func__<<" set nonblocking to client socket "<<this->fd<<" failed. errno = "<<result<<std::endl;
+            std::cout<<__func__<<" set nonblocking to listen socket "<<this->fd<<" failed. errno = "<<errno<<std::endl;
             rv = -1;
+            return rv;
         }
+    }
+    struct sockaddr_in inaddr;
+    inaddr.sin_family = AF_INET;         
+    inaddr.sin_port = htons(this->port);     
+    if(this->host.length() != 0){
+        inaddr.sin_addr.s_addr = inet_addr(this->host.c_str());
+    }else{
+        inaddr.sin_addr.s_addr = INADDR_ANY; 
+    }
+    bzero(&(inaddr.sin_zero),8);
+
+    int result = ::bind(this->fd, (const struct sockaddr*)&inaddr, sizeof(inaddr));
+    if (result == -1){
+        std::cout<<__func__<<" bind listen socket "<<this->fd<<" to server address failed. errno = "<<errno<<std::endl;
+        rv = -1;
+        return rv;
+    }
+    result = ::listen(this->fd, this->backlog);
+     if (result == -1){
+        std::cout<<__func__<<" listen on socket "<<this->fd<<" failed. errno = "<<errno<<std::endl;
+        rv = -1;
+        return rv;
     }
     return rv;
 }
