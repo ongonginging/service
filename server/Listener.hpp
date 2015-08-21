@@ -8,11 +8,13 @@
 
 #include"Configure.hpp"
 #include"ServerSocket.hpp"
+#include"EventHandler.hpp"
 
 class Listener{
     private:
         boost::shared_ptr<Configure> spConfigure;
-        boost::shared_ptr<ServerSocket> spServerSocket;
+        ServerSocket serverSocket;
+        EventHandler eventHandler;
     public:
         Listener();
         Listener(const boost::shared_ptr<Configure>& spConfigure);
@@ -23,3 +25,4 @@ class Listener{
 };
 
 #endif //__LISTENER_HPP__
+
