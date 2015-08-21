@@ -77,17 +77,16 @@ int ServerSocket::open(void){
             return rv;
         }
     }
-    struct sockaddr_in inaddr;
-    inaddr.sin_family = AF_INET;         
-    inaddr.sin_port = htons(this->port);     
+    this->inaddr.sin_family = AF_INET;         
+    this->inaddr.sin_port = htons(this->port);     
     if(this->host.length() != 0){
-        inaddr.sin_addr.s_addr = inet_addr(this->host.c_str());
+        this->inaddr.sin_addr.s_addr = inet_addr(this->host.c_str());
     }else{
-        inaddr.sin_addr.s_addr = INADDR_ANY; 
+        this->inaddr.sin_addr.s_addr = INADDR_ANY; 
     }
-    bzero(&(inaddr.sin_zero),8);
+    bzero(&(this->inaddr.sin_zero),8);
 
-    int result = ::bind(this->fd, (const struct sockaddr*)&inaddr, sizeof(inaddr));
+    int result = ::bind(this->fd, (const struct sockaddr*)&this->inaddr, sizeof(this->inaddr));
     if (result == -1){
         std::cout<<__func__<<" bind listen socket "<<this->fd<<" to server address failed. errno = "<<errno<<std::endl;
         rv = -1;

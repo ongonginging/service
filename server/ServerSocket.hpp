@@ -12,6 +12,7 @@ class ServerSocket{
         int backlog;
         int port;
         std::string host;
+        struct sockaddr_in inaddr;
         bool reuse;
         bool keepalive;
         bool nonblocking;

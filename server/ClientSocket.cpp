@@ -234,5 +234,5 @@ int ClientSocket::write(const char*& outup_buffer, const int& length){
 }
 
 std::string ClientSocket::toString(){
-    std::cout<<"{ClientSocket:"<<this<<", fd:"<<this->fd<<", nonblocking:"<<this->nonblocking<<", reopen:"<<this->reopen<<", host:"<<this->host<<", port:"<<this->port<<"}"<<std::endl;
+    std::cout<<"{ClientSocket:"<<this<<", fd:"<<this->fd<<", nonblocking:"<<this->nonblocking<<", host:"<<this->host<<", port:"<<this->port<<"}"<<std::endl;
 }
