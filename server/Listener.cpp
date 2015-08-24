@@ -33,7 +33,6 @@ Listener::Listener(const boost::shared_ptr<Configure>& spConfigure){
     if(result){
         host = tmp;
     } 
-
     this->serverSocket = ServerSocket(port, host, backlog);
 }
 
@@ -42,9 +41,11 @@ Listener::~Listener(){
 
 void Listener::start(){
     int rv = this->serverSocket.open();
+    //todo: add listen fd to event handler.
 }
 
 void Listener::serve(){
+    //todo: event handler enter loop.
     bool flag = true;
     while(flag){
         boost::shared_ptr<ClientSocket> cs = this->serverSocket.accept();
@@ -55,6 +56,7 @@ void Listener::serve(){
 }
 
 void Listener::stop(){
+    //todo: delete listen fd from event handler.
     int rv = this->serverSocket.close();
 }
 
