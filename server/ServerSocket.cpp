@@ -14,7 +14,7 @@
 #include"ServerSocket.hpp"
 #include"ClientSocket.hpp"
 
-ServerSocket::ServerSocket(void){
+ServerSocket::ServerSocket(){
     std::cout<<__func__<<std::endl;
     this->fd = -1;
     this->backlog = 1024;
@@ -34,12 +34,12 @@ ServerSocket::ServerSocket(const int& port, const std::string& host, const int& 
     this->reuse = true;
 }
 
-ServerSocket::~ServerSocket(void){
+ServerSocket::~ServerSocket(){
     std::cout<<__func__<<std::endl;
     std::cout<<__func__<<" fd = "<<this->fd<<std::endl;
 }
 
-int ServerSocket::open(void){
+int ServerSocket::open(){
     std::cout<<__func__<<std::endl;
     int rv = 0;
     if(this->fd >= 0){
@@ -101,7 +101,7 @@ int ServerSocket::open(void){
     return rv;
 }
 
-int ServerSocket::close(void){
+int ServerSocket::close(){
     std::cout<<__func__<<std::endl;
     int rv = 0;
     int result = -1;
@@ -120,7 +120,7 @@ int ServerSocket::close(void){
     return rv;
 }
 
-bool ServerSocket::accept(ClientSocket& cs){
+boost::shared_ptr<ClientSocket> ServerSocket::accept(){
     std::cout<<__func__<<std::endl;
     bool rv = false;
     int fd;
@@ -130,29 +130,33 @@ bool ServerSocket::accept(ClientSocket& cs){
     struct sockaddr_in inaddr;
     socklen_t socklen = sizeof(addr);
     fd = ::accept(this->fd, &addr, &socklen);
-    if (fd>0){
+    boost::shared_ptr<ClientSocket> cs(new ClientSocket());
+    std::cout<<__func__<<" client socket use count = "<<cs.use_count()<<std::endl;
+    if (fd>=0){
         rv = true;
         memcpy(&inaddr, &addr, sizeof(inaddr));
         host = inet_ntoa(inaddr.sin_addr);
         port = inaddr.sin_port;
-        cs.setFd(fd);
-        cs.setPort(port);
-        cs.setHost(host);
-        cs.setAddr(addr);
-        cs.setInaddr(inaddr);
+        cs->setFd(fd);
+        cs->setPort(port);
+        cs->setHost(host);
+        cs->setAddr(addr);
+        cs->setInaddr(inaddr);
         if(this->reuse){
-            cs.setReuse(true);
+            cs->setReuse(true);
         }
         if(this->nodelay){
-            cs.setNodelay(true);
+            cs->setNodelay(true);
         }
         if(this->nonblocking){
-            cs.setNonblocking(true);
+            cs->setNonblocking(true);
         }
         if(this->keepalive){
-            cs.setKeepalive(true);
+            cs->setKeepalive(true);
         }
+    }else{
+        return NULL;
     }
-    return rv;
+    return cs;
 }
 

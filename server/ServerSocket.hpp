@@ -4,12 +4,12 @@
 
 #include<iostream>
 
-#include<fcntl.h>
 #include<sys/types.h>
 #include<sys/stat.h>
 #include<sys/socket.h>
 #include<netinet/in.h>
-#include<arpa/inet.h>
+
+#include<boost/shared_ptr.hpp>
 
 #include"ClientSocket.hpp"
 
@@ -32,11 +32,11 @@ class ServerSocket{
         struct linger soLinger;
     public:
         ServerSocket(const int& port, const std::string& host, const int& backlog);
-        ServerSocket(void);
-        ~ServerSocket(void);
-        int open(void);
-        int close(void);
-        bool accept(ClientSocket& cs);
+        ServerSocket();
+        ~ServerSocket();
+        int open();
+        int close();
+        boost::shared_ptr<ClientSocket> accept();
 };
 
 #endif //__SERVERSOCKET_HPP__

@@ -45,10 +45,12 @@ void Listener::start(){
 }
 
 void Listener::serve(){
-    bool result = true;
-    while(result){
-        ClientSocket cs;
-        result = this->serverSocket.accept(cs);
+    bool flag = true;
+    while(flag){
+        boost::shared_ptr<ClientSocket> cs = this->serverSocket.accept();
+        if (cs == NULL){
+            flag = false;
+        }
     }
 }
 
