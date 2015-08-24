@@ -4,6 +4,13 @@
 
 #include<iostream>
 
+#include<fcntl.h>
+#include<sys/types.h>
+#include<sys/stat.h>
+#include<sys/socket.h>
+#include<netinet/in.h>
+#include<arpa/inet.h>
+
 #include"ClientSocket.hpp"
 
 class ServerSocket{
@@ -33,3 +40,4 @@ class ServerSocket{
 };
 
 #endif //__SERVERSOCKET_HPP__
+
