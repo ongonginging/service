@@ -9,6 +9,7 @@
 #include"Configure.hpp"
 
 static void listenCallback(int fd, short event, void *arg){
+    Listener* listener = static_cast<Listener*>(arg);
 }
 
 Listener::Listener(){
@@ -45,7 +46,7 @@ Listener::~Listener(){
 void Listener::init(){
     int rv = this->serverSocket.open();
     this->handler.init();
-    this->handler.setCallback(listenCallback, this->serverSocket.getFd(), (void*)this);
+    this->handler.setListenCallback(listenCallback, this->serverSocket.getFd(), static_cast<void*>(this));
 }
 
 void Listener::serve(){

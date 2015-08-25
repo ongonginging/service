@@ -11,7 +11,7 @@ private:
 public:
     ListenHandler();
     ~ListenHandler();
-    void setCallback(void (* cb)(evutil_socket_t fd, short event, void* arg), evutil_socket_t fd, void* arg);
+    void setListenCallback(void (* cb)(evutil_socket_t fd, short event, void* arg), evutil_socket_t fd, void* arg);
     void init();
     void serve();
     void shutdown();

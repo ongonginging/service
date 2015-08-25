@@ -15,7 +15,7 @@ void ListenHandler::init(){
     this->base = event_base_new();
 }
 
-void ListenHandler::setCallback(void (* cb)(evutil_socket_t fd, short event, void* arg), evutil_socket_t fd, void* arg){
+void ListenHandler::setListenCallback(void (* cb)(evutil_socket_t fd, short event, void* arg), evutil_socket_t fd, void* arg){
     this->listenEvent = event_new(this->base, fd, EV_READ|EV_PERSIST, cb, arg);
     event_add(this->listenEvent, NULL);//set event timeout.
 }

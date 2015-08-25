@@ -3,7 +3,6 @@
 #define __LISTENER_HPP__
 
 #include<iostream>
-
 #include <boost/shared_ptr.hpp>
 
 #include"Configure.hpp"
