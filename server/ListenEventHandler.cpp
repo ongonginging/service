@@ -4,11 +4,13 @@
 #include"ListenEventHandler.hpp"
 
 ListenHandler::ListenHandler(){
-    std::cout<<__func__<<" default constructor."<<std::endl;
+    std::cout<<__func__<<" enter default constructor."<<std::endl;
+    std::cout<<__func__<<" leave default constructor."<<std::endl;
 }
 
 ListenHandler::~ListenHandler(){
-    std::cout<<__func__<<" default destructor."<<std::endl;
+    std::cout<<__func__<<" enter default destructor."<<std::endl;
+    std::cout<<__func__<<" leave default destructor."<<std::endl;
 }
 
 void ListenHandler::init(){

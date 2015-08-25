@@ -4,14 +4,17 @@
 
 #include"Configure.hpp"
 #include"ServerSocket.hpp"
-#include"Listener.hpp"
+#include"Listenner.hpp"
 
 int main(int argc, char* argv[]){
     int rv = 0;
-    boost::shared_ptr<Configure> configure(new Test());
+    boost::shared_ptr<Configure> configure(new Configure());
     configure->set("port", "9544");
     configure->set("host", "127.0.0.1");
     configure->set("backlog", "1024");
+    Listener listener = Listener(configure);
+    listener.init();
+    listener.serve();
 
 #if 0 //test configure module
     bool result = false;

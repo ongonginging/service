@@ -3,7 +3,7 @@
 
 #include<boost/lexical_cast.hpp>
 
-#include"Listener.hpp"
+#include"Listenner.hpp"
 #include"ServerSocket.hpp"
 #include"ClientSocket.hpp"
 #include"Configure.hpp"
@@ -17,36 +17,40 @@ Listener::Listener(){
 
 Listener::Listener(const boost::shared_ptr<Configure>& configure){
 
-    this->configure = configure;
-
     int backlog;
     int port;
     std::string host;
 
+    this->configure = configure;
+
     std::string tmp;
-    bool result = false;
-    result = this->configure->get("backlog", tmp);
-    if(result){
+    if(this->configure->get("backlog", tmp)){
         backlog = boost::lexical_cast<int>(tmp);
+    }else {
+        throw 1;
     }
-    result = this->configure->get("port", tmp);
-    if(result){
+    if(this->configure->get("port", tmp)){
         port = boost::lexical_cast<int>(tmp);
-    } 
-    result = this->configure->get("host", tmp);
-    if(result){
+    }else{
+        throw 2;
+    }
+    if(this->configure->get("host", tmp)){
         host = tmp;
-    } 
-    this->serverSocket = ServerSocket(port, host, backlog);
+    }else{
+        throw 3;
+    }
+
+    boost::shared_ptr<ServerSocket> serverSocket(new ServerSocket(port, host, backlog));
+    this->serverSocket = serverSocket;
 }
 
 Listener::~Listener(){
 }
 
 void Listener::init(){
-    int rv = this->serverSocket.open();
+    int rv = this->serverSocket->open();
     this->handler.init();
-    this->handler.setListenCallback(listenCallback, this->serverSocket.getFd(), static_cast<void*>(this));
+    this->handler.setListenCallback(listenCallback, this->serverSocket->getFd(), static_cast<void*>(this));
 }
 
 void Listener::serve(){
@@ -54,7 +58,7 @@ void Listener::serve(){
 }
 
 void Listener::shutdown(){
-    int rv = this->serverSocket.close();
+    int rv = this->serverSocket->close();
     this->handler.shutdown();
 }
 

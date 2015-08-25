@@ -25,13 +25,14 @@ ServerSocket::ServerSocket(){
 }
 
 ServerSocket::ServerSocket(const int& port, const std::string& host, const int& backlog){
-    std::cout<<__func__<<std::endl;
+    std::cout<<__func__<<" enter"<<std::endl;
     this->fd = -1;
     this->port = port;
     this->host = host;
     this->backlog = backlog;
     this->nonblocking = true;
     this->reuse = true;
+    std::cout<<__func__<<" leave"<<std::endl;
 }
 
 ServerSocket::~ServerSocket(){

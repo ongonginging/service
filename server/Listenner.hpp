@@ -1,6 +1,6 @@
 
-#ifndef __LISTENER_HPP__
-#define __LISTENER_HPP__
+#ifndef __LISTENNER_HPP__
+#define __LISTENNER_HPP__
 
 #include<iostream>
 #include <boost/shared_ptr.hpp>
@@ -12,7 +12,7 @@
 class Listener{
     private:
         boost::shared_ptr<Configure> configure;
-        ServerSocket serverSocket;
+        boost::shared_ptr<ServerSocket> serverSocket;
         ListenHandler handler;
     public:
         Listener();
@@ -23,5 +23,5 @@ class Listener{
         void shutdown();
 };
 
-#endif //__LISTENER_HPP__
+#endif //__LISTENNER_HPP__
 

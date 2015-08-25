@@ -5,19 +5,22 @@
 
 #if 1
 Configure::Configure(void){
-    std::cout<<__func__<<" default constructor."<<std::endl;
+    std::cout<<__func__<<" enter default constructor."<<std::endl;
+    std::cout<<__func__<<" leave default constructor."<<std::endl;
 }
 #endif
 
 #if 1
 Configure::Configure(bool flags){
-    std::cout<<__func__<<" customer constructor."<<std::endl;
+    std::cout<<__func__<<" enter 1 constructor."<<std::endl;
+    std::cout<<__func__<<" leave 1 constructor."<<std::endl;
 }
 #endif
 
 #if 1
 Configure::~Configure(void){
-    std::cout<<__func__<<" default destructor."<<std::endl;
+    std::cout<<__func__<<" enter default destructor."<<std::endl;
+    std::cout<<__func__<<" leave default destructor."<<std::endl;
 }
 #endif
 
