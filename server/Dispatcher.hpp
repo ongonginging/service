@@ -12,8 +12,8 @@
 
 class Dispatcher{
     private:
-        boost::shared_ptr<Configure> spConfigure;
-        boost::shared_ptr<Listener> spListener;
+        boost::shared_ptr<Configure> configure;
+        boost::shared_ptr<Listener> listener;
     public:
         void serve(void);
 };
