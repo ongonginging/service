@@ -8,7 +8,6 @@ class IEventHandler{
 protected:
     struct event_base* base;
 public:
-    virtual void setCallback(void (* cb)(int fd, short event, void *arg))=0;
     virtual void init()=0;
     virtual void serve()=0;
     virtual void shutdown()=0;

@@ -8,12 +8,15 @@
 #include"ClientSocket.hpp"
 #include"Configure.hpp"
 
+static void listenCallback(int fd, short event, void *arg){
+}
+
 Listener::Listener(){
 }
 
-Listener::Listener(const boost::shared_ptr<Configure>& spConfigure){
+Listener::Listener(const boost::shared_ptr<Configure>& configure){
 
-    this->spConfigure = spConfigure;
+    this->configure = configure;
 
     int backlog;
     int port;
@@ -21,15 +24,15 @@ Listener::Listener(const boost::shared_ptr<Configure>& spConfigure){
 
     std::string tmp;
     bool result = false;
-    result = this->spConfigure->get("backlog", tmp);
+    result = this->configure->get("backlog", tmp);
     if(result){
         backlog = boost::lexical_cast<int>(tmp);
     }
-    result = this->spConfigure->get("port", tmp);
+    result = this->configure->get("port", tmp);
     if(result){
         port = boost::lexical_cast<int>(tmp);
     } 
-    result = this->spConfigure->get("host", tmp);
+    result = this->configure->get("host", tmp);
     if(result){
         host = tmp;
     } 
@@ -39,25 +42,18 @@ Listener::Listener(const boost::shared_ptr<Configure>& spConfigure){
 Listener::~Listener(){
 }
 
-void Listener::start(){
+void Listener::init(){
     int rv = this->serverSocket.open();
-    //todo: add listen fd to event handler.
+    this->handler.init();
+    this->handler.setCallback(listenCallback, this->serverSocket.getFd(), (void*)this);
 }
 
 void Listener::serve(){
-    //todo: event handler enter loop.
-    bool flag = true;
-    while(flag){
-        boost::shared_ptr<ClientSocket> cs = this->serverSocket.accept();
-        if (cs == NULL){
-            flag = false;
-        }
-    }
+    this->handler.serve();
 }
 
-void Listener::stop(){
-    //todo: delete listen fd from event handler.
+void Listener::shutdown(){
     int rv = this->serverSocket.close();
+    this->handler.shutdown();
 }
-
 

@@ -39,6 +39,14 @@ ServerSocket::~ServerSocket(){
     std::cout<<__func__<<" fd = "<<this->fd<<std::endl;
 }
 
+int ServerSocket::getFd(){
+    return this->fd;
+}
+
+void ServerSocket::setFd(int fd){
+    this->fd = fd;
+}
+
 int ServerSocket::open(){
     std::cout<<__func__<<std::endl;
     int rv = 0;

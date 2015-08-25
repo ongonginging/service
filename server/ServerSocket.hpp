@@ -31,6 +31,8 @@ class ServerSocket{
         int recvBuffer;
         struct linger soLinger;
     public:
+        int getFd();
+        void setFd(int fd);
         ServerSocket(const int& port, const std::string& host, const int& backlog);
         ServerSocket();
         ~ServerSocket();
