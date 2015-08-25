@@ -49,64 +49,66 @@ void ServerSocket::setFd(int fd){
 }
 
 int ServerSocket::open(){
-    std::cout<<__func__<<std::endl;
+    std::cout<<__func__<<" enter"<<std::endl;
     int rv = 0;
-    if(this->fd >= 0){
-        std::cout<<__func__<<" fd>0 when openning socket."<<std::endl;
-        return rv;
-    }
-    int fd = -1;
-    try{
-        fd = ::socket(AF_INET, SOCK_STREAM, 0);
-    }catch(std::exception& e){
-        std::cout<<__func__<<" exception information: "<<e.what()<<std::endl;
-    }
-    if(fd == -1){
-        std::cout<<__func__<<" created listen socket failed. errno = "<<errno<<std::endl;
-        rv = -1;
-        return rv;
-    }else{
-        this->fd = fd; 
-        std::cout<<__func__<<" successful created listen socket "<<this->fd;
-    }
-    if(this->reuse){
-        int flag = 1;
-        int result = setsockopt(this->fd, SOL_SOCKET, SO_REUSEADDR, &flag, sizeof(flag));
-        if (result == -1){
-            std::cout<<__func__<<" set reuseaddr to listen socket "<<this->fd<<" failed. errno = "<<errno<<std::endl;
-            rv = -1;
-            return rv;
+    do{
+        if(this->fd >= 0){
+            std::cout<<__func__<<" fd>0 when openning socket."<<std::endl;
+            break;//return rv;
         }
-    }
-    if(this->nonblocking){
-        int result = fcntl(this->fd, F_SETFL, O_NONBLOCK|fcntl(this->fd, F_GETFL));
-        if (result == -1){
-            std::cout<<__func__<<" set nonblocking to listen socket "<<this->fd<<" failed. errno = "<<errno<<std::endl;
-            rv = -1;
-            return rv;
+        int fd = -1;
+        try{
+            fd = ::socket(AF_INET, SOCK_STREAM, 0);
+        }catch(std::exception& e){
+            std::cout<<__func__<<" exception information: "<<e.what()<<std::endl;
         }
-    }
-    this->inaddr.sin_family = AF_INET;         
-    this->inaddr.sin_port = htons(this->port);     
-    if(this->host.length() != 0){
-        this->inaddr.sin_addr.s_addr = inet_addr(this->host.c_str());
-    }else{
-        this->inaddr.sin_addr.s_addr = INADDR_ANY; 
-    }
-    bzero(&(this->inaddr.sin_zero),8);
+        if(fd == -1){
+            std::cout<<__func__<<" created listen socket failed. errno = "<<errno<<std::endl;
+            rv = -1;
+            break;//return rv;
+        }else{
+            this->fd = fd; 
+            std::cout<<__func__<<" successful created listen socket "<<this->fd;
+        }
+        if(this->reuse){
+            int flag = 1;
+            int result = setsockopt(this->fd, SOL_SOCKET, SO_REUSEADDR, &flag, sizeof(flag));
+            if (result == -1){
+                std::cout<<__func__<<" set reuseaddr to listen socket "<<this->fd<<" failed. errno = "<<errno<<std::endl;
+                rv = -1;
+                break;//return rv;
+            }
+        }
+        if(this->nonblocking){
+            int result = fcntl(this->fd, F_SETFL, O_NONBLOCK|fcntl(this->fd, F_GETFL));
+            if (result == -1){
+                std::cout<<__func__<<" set nonblocking to listen socket "<<this->fd<<" failed. errno = "<<errno<<std::endl;
+                rv = -1;
+                break;//return rv;
+            }
+        }
+        this->inaddr.sin_family = AF_INET;         
+        this->inaddr.sin_port = htons(this->port);     
+        if(this->host.length() != 0){
+            this->inaddr.sin_addr.s_addr = inet_addr(this->host.c_str());
+        }else{
+            this->inaddr.sin_addr.s_addr = INADDR_ANY; 
+        }
+        bzero(&(this->inaddr.sin_zero),8);
 
-    int result = ::bind(this->fd, (const struct sockaddr*)&this->inaddr, sizeof(this->inaddr));
-    if (result == -1){
-        std::cout<<__func__<<" bind listen socket "<<this->fd<<" to server address failed. errno = "<<errno<<std::endl;
-        rv = -1;
-        return rv;
-    }
-    result = ::listen(this->fd, this->backlog);
-     if (result == -1){
-        std::cout<<__func__<<" listen on socket "<<this->fd<<" failed. errno = "<<errno<<std::endl;
-        rv = -1;
-        return rv;
-    }
+        int result = ::bind(this->fd, (const struct sockaddr*)&this->inaddr, sizeof(this->inaddr));
+        if (result == -1){
+            std::cout<<__func__<<" bind listen socket "<<this->fd<<" to server address failed. errno = "<<errno<<std::endl;
+            rv = -1;
+            break;//return rv;
+        }
+        result = ::listen(this->fd, this->backlog);
+         if (result == -1){
+            std::cout<<__func__<<" listen on socket "<<this->fd<<" failed. errno = "<<errno<<std::endl;
+            rv = -1;
+            break;//return rv;
+        }
+    }while(false);
     return rv;
 }
 
