@@ -1,6 +1,6 @@
 
-#ifndef __LISTENHANDLER_HPP__
-#define __LISTENHANDLER_HPP__
+#ifndef __LISTENEVENTHANDLER_HPP__
+#define __LISTENEVENTHANDLER_HPP__
 
 #include <event.h>
 #include "IEventHandler.hpp"
@@ -17,5 +17,5 @@ public:
     void shutdown();
 };
 
-#endif //__LISTENHANDLER_HPP__
+#endif //__LISTENEVENTHANDLER_HPP__
 
