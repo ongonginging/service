@@ -11,7 +11,6 @@ DEP_LIBS=-lpthread\
 	-lhiredis\
 	-ljson-c\
 	-levent\
-	-lrt\
 	-lboost_regex\
 	-lboost_system\
 	-lboost_filesystem\
