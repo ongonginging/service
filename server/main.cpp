@@ -15,6 +15,7 @@ int main(int argc, char* argv[]){
     Listener listener = Listener(configure);
     listener.init();
     listener.serve();
+    listener.shutdown();
 
 #if 0 //test configure module
     bool result = false;
