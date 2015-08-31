@@ -5,12 +5,13 @@
 #include <event.h>
 #include "IEventHandler.hpp"
 
-class ListenHandler: public IEventHandler{
+class ListenEventHandler: public IEventHandler{
 private:
+    std::string className = "ListenEventHandler";
     struct event* listenEvent;
 public:
-    ListenHandler();
-    ~ListenHandler();
+    ListenEventHandler();
+    ~ListenEventHandler();
     void setListenCallback(void (* cb)(evutil_socket_t fd, short event, void* arg), evutil_socket_t fd, void* arg);
     void init();
     void serve();

@@ -6,6 +6,7 @@
 
 class IEventHandler{
 protected:
+    std::string className = "IEventHandler";
     struct event_base* base;
 public:
     virtual void init()=0;

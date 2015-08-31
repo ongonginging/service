@@ -11,7 +11,7 @@
 
 class ClientSocket{
     private:
-
+        std::string className = "ClientSocket";
         bool reopen;
 
         socklen_t socklen;

@@ -15,6 +15,7 @@
 
 class ServerSocket{
     private:
+        std::string className = "ServerSocket";
         int fd;
         int backlog;
         int port;

@@ -7,6 +7,7 @@
 
 class Configure{
     private:
+        std::string className = "Configure";
         std::map<std::string, std::string> configure;
     public:
         Configure();
