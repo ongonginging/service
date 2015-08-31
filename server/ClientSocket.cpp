@@ -12,15 +12,18 @@
 #include<arpa/inet.h>
 
 #include"ClientSocket.hpp"
+#include"Log.hpp"
 
 ClientSocket::ClientSocket(void){
+    LOG_ENTER_FUNC(" default constructor.");
     std::cout<<__func__<<" default constructor."<<std::endl;
     this->reopen = false;
     this->fd = -1;
+    LOG_ENTER_FUNC(" default constructor.");
 }
 
 ClientSocket::ClientSocket(int fd){
-    std::cout<<__func__<<" customer(int fd) constuctor."<<std::endl;
+    LOG_ENTER_FUNC("(int fd) constructor.");
     this->fd = -1;
     int result = 0;
     if(fd >= 0){
@@ -35,13 +38,16 @@ ClientSocket::ClientSocket(int fd){
     }else{
         std::cout<<__func__<<" fd(client socket)<0."<<std::endl;
     }
+    LOG_LEAVE_FUNC("(int fd) constructor.");
 }
 
 ClientSocket::~ClientSocket(void){
-    std::cout<<__func__<<" default destructor."<<std::endl;
+    LOG_ENTER_FUNC(" default destructor.");
+    LOG_LEAVE_FUNC(" default destructor.");
 }
 
 int ClientSocket::open(void){
+    LOG_ENTER_FUNC("");
     std::cout<<__func__<<std::endl;
     int rv = 0;
     if(this->fd >= 0){
@@ -51,6 +57,7 @@ int ClientSocket::open(void){
             int result = this->close();
             if (result == -1){
                 rv = -1;
+                LOG_LEAVE_FUNC("");
                 return rv;
             } 
         }else{
@@ -61,6 +68,7 @@ int ClientSocket::open(void){
     fd = ::socket(AF_INET, SOCK_STREAM, 0);
     if(fd == -1){
         std::cout<<__func__<<" created client socket failed. errno = "<<errno<<std::endl;
+        LOG_LEAVE_FUNC("");
         return -1;
     }else{
         this->fd = fd; 
@@ -73,11 +81,12 @@ int ClientSocket::open(void){
             rv = -1;
         }
     }
+    LOG_LEAVE_FUNC("");
     return rv;
 }
 
 int ClientSocket::close(void){
-    std::cout<<__func__<<std::endl;
+    LOG_ENTER_FUNC("");
     int rv = 0;
     int result = -1;
     if(this->fd>=0){
@@ -90,8 +99,10 @@ int ClientSocket::close(void){
         }
     }else{
         std::cout<<__func__<<" we would not close client socket. fd<0."<<std::endl;
+        LOG_LEAVE_FUNC("");
         return -1;
     }
+    LOG_LEAVE_FUNC("");
     return rv;
 }
 
@@ -226,11 +237,13 @@ void ClientSocket::setLinger(const struct linger& soLinger){
 }
 
 int ClientSocket::read(const char*& input_buffer){
-    std::cout<<__func__<<std::endl;
+    LOG_ENTER_FUNC("");
+    LOG_LEAVE_FUNC("");
 }
 
 int ClientSocket::write(const char*& outup_buffer, const int& length){
-    std::cout<<__func__<<std::endl;
+    LOG_ENTER_FUNC("");
+    LOG_LEAVE_FUNC("");
 }
 
 std::string ClientSocket::toString(){
