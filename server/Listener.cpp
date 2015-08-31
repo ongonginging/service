@@ -14,10 +14,12 @@ ClientSocket* accept(Listener* listener){
 }
 
 void listenCallback(evutil_socket_t fd, short event, void *arg){
+    LOG_ENTER_FUNC("");
     Listener* listener = static_cast<Listener*>(arg);
     while(auto cs = accept(listener)){
         std::cout<<"accept new client: (fd:"<<cs->getFd()<<")"<<cs->getHost()<<":"<<cs->getPort()<<std::endl;
     }
+    LOG_LEAVE_FUNC("");
 }
 
 Listener::Listener(){
