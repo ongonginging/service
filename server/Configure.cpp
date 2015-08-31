@@ -2,33 +2,37 @@
 #include<iostream>
 
 #include"Configure.hpp"
+#include"Log.hpp"
 
 #if 1
 Configure::Configure(void){
-    std::cout<<__func__<<" enter default constructor."<<std::endl;
-    std::cout<<__func__<<" leave default constructor."<<std::endl;
+    LOG_ENTER_FUNC("default constructor");
+    LOG_LEAVE_FUNC("default constructor");
 }
 #endif
 
 #if 1
 Configure::Configure(bool flags){
-    std::cout<<__func__<<" enter 1 constructor."<<std::endl;
-    std::cout<<__func__<<" leave 1 constructor."<<std::endl;
+    LOG_ENTER_FUNC("bool flags");
+    LOG_LEAVE_FUNC("bool flags");
 }
 #endif
 
 #if 1
 Configure::~Configure(void){
-    std::cout<<__func__<<" enter default destructor."<<std::endl;
-    std::cout<<__func__<<" leave default destructor."<<std::endl;
+    LOG_ENTER_FUNC("default destructor");
+    LOG_LEAVE_FUNC("default destructor");
 }
 #endif
 
 void Configure::set(const std::string& key, const std::string& value){
+    LOG_ENTER_FUNC("");
     this->configure[key] = value;   
+    LOG_LEAVE_FUNC("");
 }
 
 bool Configure::get(const std::string& key, std::string& value){
+    LOG_ENTER_FUNC("");
     bool rv = false;
     std::map<std::string, std::string>::iterator it;
     it = this->configure.find(key);
@@ -39,6 +43,7 @@ bool Configure::get(const std::string& key, std::string& value){
         value = "";
         rv = false;
     }
+    LOG_LEAVE_FUNC("")
     return rv;
 }
 

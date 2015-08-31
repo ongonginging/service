@@ -7,16 +7,19 @@
 #include"ServerSocket.hpp"
 #include"ClientSocket.hpp"
 #include"Configure.hpp"
+#include"Log.hpp"
 
 static void listenCallback(int fd, short event, void *arg){
     Listener* listener = static_cast<Listener*>(arg);
 }
 
 Listener::Listener(){
+    LOG_ENTER_FUNC("");
+    LOG_LEAVE_FUNC("");
 }
 
 Listener::Listener(const boost::shared_ptr<Configure>& configure){
-
+    LOG_ENTER_FUNC("");
     int backlog;
     int port;
     std::string host;
@@ -42,23 +45,32 @@ Listener::Listener(const boost::shared_ptr<Configure>& configure){
 
     boost::shared_ptr<ServerSocket> serverSocket(new ServerSocket(port, host, backlog));
     this->serverSocket = serverSocket;
+    LOG_LEAVE_FUNC("");
 }
 
 Listener::~Listener(){
+    LOG_ENTER_FUNC("default destructor");
+    LOG_LEAVE_FUNC("default destructor");
 }
 
 void Listener::init(){
+    LOG_ENTER_FUNC("");
     int rv = this->serverSocket->open();
     this->handler.init();
     this->handler.setListenCallback(listenCallback, this->serverSocket->getFd(), static_cast<void*>(this));
+    LOG_LEAVE_FUNC("")
 }
 
 void Listener::serve(){
+    LOG_ENTER_FUNC("");
     this->handler.serve();
+    LOG_LEAVE_FUNC("")
 }
 
 void Listener::shutdown(){
+    LOG_ENTER_FUNC("");
     int rv = this->serverSocket->close();
     this->handler.shutdown();
+    LOG_LEAVE_FUNC("")
 }
 

@@ -13,31 +13,34 @@
 
 #include"ServerSocket.hpp"
 #include"ClientSocket.hpp"
+#include"Log.hpp"
 
 ServerSocket::ServerSocket(){
-    std::cout<<__func__<<std::endl;
+    LOG_ENTER_FUNC(""); 
     this->fd = -1;
     this->backlog = 1024;
     this->port = 9544;
     this->host = "127.0.0.1";
     this->nonblocking = true;
     this->reuse = true;
+    LOG_LEAVE_FUNC(""); 
 }
 
 ServerSocket::ServerSocket(const int& port, const std::string& host, const int& backlog){
-    std::cout<<__func__<<" enter"<<std::endl;
+    LOG_ENTER_FUNC(""); 
     this->fd = -1;
     this->port = port;
     this->host = host;
     this->backlog = backlog;
     this->nonblocking = true;
     this->reuse = true;
-    std::cout<<__func__<<" leave"<<std::endl;
+    LOG_LEAVE_FUNC("");
 }
 
 ServerSocket::~ServerSocket(){
-    std::cout<<__func__<<std::endl;
+    LOG_ENTER_FUNC(""); 
     std::cout<<__func__<<" fd = "<<this->fd<<std::endl;
+    LOG_LEAVE_FUNC("");
 }
 
 int ServerSocket::getFd(){
@@ -49,7 +52,7 @@ void ServerSocket::setFd(int fd){
 }
 
 int ServerSocket::open(){
-    std::cout<<__func__<<" enter"<<std::endl;
+    LOG_ENTER_FUNC("");
     int rv = 0;
     do{
         if(this->fd >= 0){
@@ -109,12 +112,12 @@ int ServerSocket::open(){
             break;//return rv;
         }
     }while(false);
-    std::cout<<__func__<<" leave"<<std::endl;
+    LOG_LEAVE_FUNC("");
     return rv;
 }
 
 int ServerSocket::close(){
-    std::cout<<__func__<<" enter"<<std::endl;
+    LOG_ENTER_FUNC("");
     int rv = 0;
     int result = -1;
     if(this->fd>=0){
@@ -129,12 +132,12 @@ int ServerSocket::close(){
         std::cout<<__func__<<" we would not close client socket. fd<0."<<std::endl;
         return -1;
     }
-    std::cout<<__func__<<" leave"<<std::endl;
+    LOG_LEAVE_FUNC("");
     return rv;
 }
 
 boost::shared_ptr<ClientSocket> ServerSocket::accept(){
-    std::cout<<__func__<<" enter"<<std::endl;
+    LOG_ENTER_FUNC("");
     bool rv = false;
     int fd;
     int port; 
@@ -168,10 +171,10 @@ boost::shared_ptr<ClientSocket> ServerSocket::accept(){
             cs->setKeepalive(true);
         }
     }else{
-        std::cout<<__func__<<" leave"<<std::endl;
+        LOG_LEAVE_FUNC("");
         return NULL;
     }
-    std::cout<<__func__<<" leave"<<std::endl;
+    LOG_LEAVE_FUNC("");
     return cs;
 }
 
