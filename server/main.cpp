@@ -16,25 +16,6 @@ int main(int argc, char* argv[]){
     listener.init();
     listener.serve();
     listener.shutdown();
-
-#if 0 //test configure module
-    bool result = false;
-    std::string value = "";
-    result = configure->get("port", value);
-    std::cout<<"port = "<<value<<std::endl;
-    result = configure->get("host", value);
-    std::cout<<"host = "<<value<<std::endl;
-    result = configure->get("backlog", value);
-    std::cout<<"backlog = "<<value<<std::endl;
-    result = configure->get("hello, world!", value);
-    std::cout<<"hello, world = "<<value<<std::endl;
-#endif 
-
-#if 0//test configure module 
-    Configure* pConfigure(new Test());
-    delete(pConfigure);
-#endif
-
     return rv;
 }
 

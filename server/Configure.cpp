@@ -47,6 +47,10 @@ bool Configure::get(const std::string& key, std::string& value){
     return rv;
 }
 
+bool Configure::parseFromConfigFile(){
+
+}
+
 #if 1
 Test::Test(void){
     std::cout<<__func__<<" default constructor."<<std::endl;
