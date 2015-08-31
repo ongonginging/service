@@ -17,3 +17,4 @@ class Connection{
 };
 
 #endif //__CONNECTION_HPP__
+
