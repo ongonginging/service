@@ -9,6 +9,19 @@
 #include"Configure.hpp"
 #include"Log.hpp"
 
+boost::shared_ptr<ClientSocket> acceptFn(Listener* listener){
+    return listener->serverSocket->accept();
+}
+
+void listenCallback(evutil_socket_t fd, short event, void *arg){
+    Listener* listener = static_cast<Listener*>(arg);
+    auto cs = acceptFn(listener); 
+    if(cs != NULL){
+        std::cout<<"use count of client socket object:"<<cs.use_count()<<""<<std::endl;
+        std::cout<<"accept new client: (fd:"<<cs->getFd()<<")"<<cs->getHost()<<":"<<cs->getPort()<<std::endl;
+    }
+}
+
 Listener::Listener(){
     LOG_ENTER_FUNC("");
     LOG_LEAVE_FUNC("");
@@ -42,20 +55,11 @@ Listener::~Listener(){
     LOG_LEAVE_FUNC("default destructor");
 }
 
-void Listener::listenCallback(evutil_socket_t fd, short event, void *arg){
-    Listener* listener = static_cast<Listener*>(arg);
-    auto cs = listener->serverSocket->accept();
-    if(cs != NULL){
-        std::cout<<"use count of client socket object:"<<cs.use_count()<<""<<std::endl;
-        std::cout<<"accept new client: (fd:"<<cs->getFd()<<")"<<cs->getHost()<<":"<<cs->getPort()<<std::endl;
-    }
-}
-
 void Listener::init(){
     LOG_ENTER_FUNC("");
     int rv = this->serverSocket->open();
     this->handler.init();
-    this->handler.setListenCallback(this->listenCallback, this->serverSocket->getFd(), static_cast<void*>(this));
+    this->handler.setListenCallback(listenCallback, this->serverSocket->getFd(), static_cast<void*>(this));
     LOG_LEAVE_FUNC("")
 }
 
