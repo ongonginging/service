@@ -8,6 +8,7 @@
 
 class Connection{
     private:
+        std::string className = "Connection";
         Buffer input;
         Buffer output;
     public:

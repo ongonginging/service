@@ -7,6 +7,7 @@
 
 class Header{
     private:
+        std::string className = "Header";
         int length;
     public:
         int& read_length(void);
@@ -15,6 +16,7 @@ class Header{
 
 class Body{
     private:
+        std::string className = "Header";
         std::string data;
     public:
         std::string& read_data(void);
@@ -23,6 +25,7 @@ class Body{
 
 class Protocol{//:public IProtocol{
     private:
+        std::string className = "Header";
         Header header;
         Body body;
     public:

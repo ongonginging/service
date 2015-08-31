@@ -17,6 +17,7 @@
 
 class Thread{
     private:
+        std::string className = "Thread";
         std::map<int, boost::shared_ptr<Connection>> event; 
         std::thread thread;
     public:
@@ -24,6 +25,7 @@ class Thread{
 
 class ProtocolEngine{
     private:
+        std::string className = "ProtocolEngine";
         boost::shared_ptr<Configure> configure;
         std::map<int, Thread> hThreadPool;//map fd to thread 
     public:

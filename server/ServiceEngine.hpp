@@ -4,6 +4,7 @@
 
 class ServiceEngine{
     private:
+        std::string className = "ServiceEngine";
     public:
 };
 

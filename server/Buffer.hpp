@@ -7,6 +7,7 @@
 
 class Buffer{
     protected:
+        std::string className = "Buffer";
         size_t size;
         unsigned char* ptr;
     public:
