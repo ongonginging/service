@@ -9,10 +9,6 @@
 #include"Configure.hpp"
 #include"Log.hpp"
 
-static void listenCallback(int fd, short event, void *arg){
-    Listener* listener = static_cast<Listener*>(arg);
-}
-
 Listener::Listener(){
     LOG_ENTER_FUNC("");
     LOG_LEAVE_FUNC("");
@@ -29,20 +25,13 @@ Listener::Listener(const boost::shared_ptr<Configure>& configure){
     std::string tmp;
     if(this->configure->get("backlog", tmp)){
         backlog = boost::lexical_cast<int>(tmp);
-    }else {
-        throw 1;
     }
     if(this->configure->get("port", tmp)){
         port = boost::lexical_cast<int>(tmp);
-    }else{
-        throw 2;
     }
     if(this->configure->get("host", tmp)){
         host = tmp;
-    }else{
-        throw 3;
     }
-
     boost::shared_ptr<ServerSocket> serverSocket(new ServerSocket(port, host, backlog));
     this->serverSocket = serverSocket;
     LOG_LEAVE_FUNC("");
@@ -53,11 +42,20 @@ Listener::~Listener(){
     LOG_LEAVE_FUNC("default destructor");
 }
 
+void Listener::listenCallback(evutil_socket_t fd, short event, void *arg){
+    Listener* listener = static_cast<Listener*>(arg);
+    auto cs = listener->serverSocket->accept();
+    if(cs != NULL){
+        std::cout<<"use count of client socket object:"<<cs.use_count()<<""<<std::endl;
+        std::cout<<"accept new client: (fd:"<<cs->getFd()<<")"<<cs->getHost()<<":"<<cs->getPort()<<std::endl;
+    }
+}
+
 void Listener::init(){
     LOG_ENTER_FUNC("");
     int rv = this->serverSocket->open();
     this->handler.init();
-    this->handler.setListenCallback(listenCallback, this->serverSocket->getFd(), static_cast<void*>(this));
+    this->handler.setListenCallback(this->listenCallback, this->serverSocket->getFd(), static_cast<void*>(this));
     LOG_LEAVE_FUNC("")
 }
 

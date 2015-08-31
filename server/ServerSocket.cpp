@@ -101,16 +101,17 @@ int ServerSocket::open(){
 
         int result = ::bind(this->fd, (const struct sockaddr*)&this->inaddr, sizeof(this->inaddr));
         if (result == -1){
-            std::cout<<__func__<<" bind listen socket "<<this->fd<<" to server address failed. errno = "<<errno<<std::endl;
+            std::cout<<__func__<<" bind socket "<<this->fd<<" to server address failed. errno = "<<errno<<std::endl;
             rv = -1;
             break;//return rv;
         }
         result = ::listen(this->fd, this->backlog);
-         if (result == -1){
-            std::cout<<__func__<<" listen on socket "<<this->fd<<" failed. errno = "<<errno<<std::endl;
+        if (result == -1){
+            std::cout<<__func__<<" listen socket "<<this->fd<<" failed. errno = "<<errno<<std::endl;
             rv = -1;
             break;//return rv;
         }
+        std::cout<<"listen on: "<<host<<":"<<port<<std::endl;
     }while(false);
     LOG_LEAVE_FUNC("");
     return rv;

@@ -3,6 +3,7 @@
 #define __LISTENER_HPP__
 
 #include<iostream>
+#include<event.h>
 #include <boost/shared_ptr.hpp>
 
 #include"Configure.hpp"
@@ -15,6 +16,7 @@ class Listener{
         boost::shared_ptr<Configure> configure;
         boost::shared_ptr<ServerSocket> serverSocket;
         ListenEventHandler handler;
+
     public:
         Listener();
         Listener(const boost::shared_ptr<Configure>& configure);
@@ -22,6 +24,7 @@ class Listener{
         void init();
         void serve();
         void shutdown();
+        static void listenCallback(evutil_socket_t fd, short event, void *arg);
 };
 
 #endif //__LISTENER_HPP__

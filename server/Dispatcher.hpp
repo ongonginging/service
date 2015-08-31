@@ -12,6 +12,7 @@
 
 class Dispatcher{
     private:
+        std::string className = "Dispatcher";
         boost::shared_ptr<Configure> configure;
         boost::shared_ptr<Listener> listener;
     public:
