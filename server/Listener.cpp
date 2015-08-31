@@ -9,13 +9,13 @@
 #include"Configure.hpp"
 #include"Log.hpp"
 
-ClientSocket* acceptFn(Listener* listener){
+ClientSocket* accept(Listener* listener){
     return listener->serverSocket->accept();
 }
 
 void listenCallback(evutil_socket_t fd, short event, void *arg){
     Listener* listener = static_cast<Listener*>(arg);
-    while(auto cs = acceptFn(listener)){
+    while(auto cs = accept(listener)){
         std::cout<<"accept new client: (fd:"<<cs->getFd()<<")"<<cs->getHost()<<":"<<cs->getPort()<<std::endl;
     }
 }

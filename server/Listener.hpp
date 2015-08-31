@@ -16,7 +16,7 @@ class Listener{
         boost::shared_ptr<Configure> configure;
         boost::shared_ptr<ServerSocket> serverSocket;
         ListenEventHandler handler;
-        friend ClientSocket* acceptFn(Listener* listener);
+        friend ClientSocket* accept(Listener* listener);
     public:
         Listener();
         Listener(const boost::shared_ptr<Configure>& configure);
