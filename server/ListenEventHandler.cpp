@@ -14,7 +14,9 @@ ListenHandler::~ListenHandler(){
 }
 
 void ListenHandler::init(){
+    std::cout<<__func__<<" enter init."<<std::endl;
     this->base = event_base_new();
+    std::cout<<__func__<<" leave init."<<std::endl;
 }
 
 void ListenHandler::setListenCallback(void (* cb)(evutil_socket_t fd, short event, void* arg), evutil_socket_t fd, void* arg){

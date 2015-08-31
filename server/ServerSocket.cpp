@@ -68,7 +68,7 @@ int ServerSocket::open(){
             break;//return rv;
         }else{
             this->fd = fd; 
-            std::cout<<__func__<<" successful created listen socket "<<this->fd;
+            std::cout<<__func__<<" successful created listen socket "<<this->fd<<std::endl;
         }
         if(this->reuse){
             int flag = 1;
@@ -109,11 +109,12 @@ int ServerSocket::open(){
             break;//return rv;
         }
     }while(false);
+    std::cout<<__func__<<" leave"<<std::endl;
     return rv;
 }
 
 int ServerSocket::close(){
-    std::cout<<__func__<<std::endl;
+    std::cout<<__func__<<" enter"<<std::endl;
     int rv = 0;
     int result = -1;
     if(this->fd>=0){
@@ -128,11 +129,12 @@ int ServerSocket::close(){
         std::cout<<__func__<<" we would not close client socket. fd<0."<<std::endl;
         return -1;
     }
+    std::cout<<__func__<<" leave"<<std::endl;
     return rv;
 }
 
 boost::shared_ptr<ClientSocket> ServerSocket::accept(){
-    std::cout<<__func__<<std::endl;
+    std::cout<<__func__<<" enter"<<std::endl;
     bool rv = false;
     int fd;
     int port; 
@@ -166,8 +168,10 @@ boost::shared_ptr<ClientSocket> ServerSocket::accept(){
             cs->setKeepalive(true);
         }
     }else{
+        std::cout<<__func__<<" leave"<<std::endl;
         return NULL;
     }
+    std::cout<<__func__<<" leave"<<std::endl;
     return cs;
 }
 
