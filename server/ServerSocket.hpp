@@ -39,7 +39,7 @@ class ServerSocket{
         ~ServerSocket();
         int open();
         int close();
-        boost::shared_ptr<ClientSocket> accept();
+        ClientSocket* accept();
 };
 
 #endif //__SERVERSOCKET_HPP__

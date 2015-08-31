@@ -9,15 +9,13 @@
 #include"Configure.hpp"
 #include"Log.hpp"
 
-boost::shared_ptr<ClientSocket> acceptFn(Listener* listener){
+ClientSocket* acceptFn(Listener* listener){
     return listener->serverSocket->accept();
 }
 
 void listenCallback(evutil_socket_t fd, short event, void *arg){
     Listener* listener = static_cast<Listener*>(arg);
-    auto cs = acceptFn(listener); 
-    if(cs != NULL){
-        std::cout<<"use count of client socket object:"<<cs.use_count()<<""<<std::endl;
+    while(auto cs = acceptFn(listener)){
         std::cout<<"accept new client: (fd:"<<cs->getFd()<<")"<<cs->getHost()<<":"<<cs->getPort()<<std::endl;
     }
 }

@@ -137,26 +137,19 @@ int ServerSocket::close(){
     return rv;
 }
 
-boost::shared_ptr<ClientSocket> ServerSocket::accept(){
+ClientSocket* ServerSocket::accept(){
     LOG_ENTER_FUNC("");
-    bool rv = false;
-    int fd;
-    int port; 
-    std::string host;
     struct sockaddr addr;
     struct sockaddr_in inaddr;
     socklen_t socklen = sizeof(addr);
-    fd = ::accept(this->fd, &addr, &socklen);
-    boost::shared_ptr<ClientSocket> cs(new ClientSocket());
-    std::cout<<__func__<<" client socket use count = "<<cs.use_count()<<std::endl;
+    int fd = ::accept(this->fd, &addr, &socklen);
+    ClientSocket* cs = NULL;
     if (fd>=0){
-        rv = true;
+        cs = new ClientSocket();
         memcpy(&inaddr, &addr, sizeof(inaddr));
-        host = inet_ntoa(inaddr.sin_addr);
-        port = inaddr.sin_port;
         cs->setFd(fd);
-        cs->setPort(port);
-        cs->setHost(host);
+        cs->setPort(inaddr.sin_port);
+        cs->setHost(inet_ntoa(inaddr.sin_addr));
         cs->setAddr(addr);
         cs->setInaddr(inaddr);
         if(this->reuse){
@@ -171,9 +164,6 @@ boost::shared_ptr<ClientSocket> ServerSocket::accept(){
         if(this->keepalive){
             cs->setKeepalive(true);
         }
-    }else{
-        LOG_LEAVE_FUNC("");
-        return NULL;
     }
     LOG_LEAVE_FUNC("");
     return cs;
