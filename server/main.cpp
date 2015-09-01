@@ -13,6 +13,12 @@ void initConfigure(boost::shared_ptr<Configure>& configure){
     configure->set("backlog", "1024");
 }
 
+void dispatchRunner(const boost::shared_ptr<Configure>& configure){
+}
+
+void startDispatchMod(const boost::shared_ptr<Configure>& configure){
+}
+
 void listenRunner(const boost::shared_ptr<Configure>& configure){
     Listener listener = Listener(configure);
     listener.init();
@@ -20,16 +26,31 @@ void listenRunner(const boost::shared_ptr<Configure>& configure){
     listener.shutdown();
 }
 
-void dispacherRunner(const boost::shared_ptr<Configure>& configure){
+void startListenMod(const boost::shared_ptr<Configure>& configure){
+    std::thread listenThread(listenRunner, configure);
+    listenThread.join();
+}
+
+void protocolEngineRunner(const boost::shared_ptr<Configure>& configure){
+}
+
+void startProtocolEngineMod(const boost::shared_ptr<Configure>& configure){
+}
+
+void serviceEngineRunner(const boost::shared_ptr<Configure>& configure){
+}
+
+void startServiceEngineMod(const boost::shared_ptr<Configure>& configure){
 }
 
 int main(int argc, char* argv[]){
     int rv = 0;
     boost::shared_ptr<Configure> configure(new Configure());
     initConfigure(configure);
-    std::function<void(const boost::shared_ptr<Configure>& configure)> fn;
-    std::thread listenThread(listenRunner, configure);
-    listenThread.join();
+    startDispatchMod(configure);
+    startServiceEngineMod(configure);
+    startProtocolEngineMod(configure);
+    startListenMod(configure);
     return rv;
 }
 
