@@ -16,7 +16,6 @@
 
 ClientSocket::ClientSocket(void){
     LOG_ENTER_FUNC(" default constructor.");
-    std::cout<<__func__<<" default constructor."<<std::endl;
     this->reopen = false;
     this->fd = -1;
     LOG_ENTER_FUNC(" default constructor.");
@@ -72,7 +71,7 @@ int ClientSocket::open(void){
         return -1;
     }else{
         this->fd = fd; 
-        std::cout<<__func__<<" successful created client socket "<<this->fd;
+        std::cout<<__func__<<" successful created client socket "<<this->fd<<std::endl;
     }
     if(this->nonblocking){
         int result = fcntl(this->fd, F_SETFL, O_NONBLOCK|fcntl(this->fd, F_GETFL));
