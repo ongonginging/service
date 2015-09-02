@@ -11,7 +11,6 @@ DEP_LIBS=-lpthread\
 	-lhiredis\
 	-ljson-c\
 	-levent\
-	-lrt\
 	-lboost_regex\
 	-lboost_system\
 	-lboost_filesystem\
@@ -36,12 +35,12 @@ OBJS=$(patsubst %.cpp,%.o, $(FILES))
 HPPS=$(foreach dir,$(DIRS),$(wildcard $(dir)/*.hpp))
 
 VPATH = .
-.cpp.o:
+.cpp.o: 
 	$(CXX) -c $(CPPFLAGS) $< -o $@ $(DEP_LIBS) $(DEP_INCS) 
 
 all: $(TARGET)
 
-$(TARGET): $(OBJS) $(HPPS)
+$(TARGET): $(OBJS)
 	$(CXX)  -o $@ $(OBJS) $(CPPFLAGS) $(DEP_LIBS) $(DEP_INCS)
 
 clean:
