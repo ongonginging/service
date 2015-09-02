@@ -2,6 +2,8 @@
 #ifndef __SERVICEENGINE_HPP__
 #define __SERVICEENGINE_HPP__
 
+#include <iostream>
+#include <vector>
 #include <thread>
 
 class ServiceEngine{
