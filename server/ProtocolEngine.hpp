@@ -15,25 +15,15 @@
 #include "Configure.hpp"
 #include "Connection.hpp"
 
-class Thread{
-    private:
-        std::string className = "Thread";
-        std::map<int, boost::shared_ptr<Connection>> event; 
-        std::thread thread;
-    public:
-};
-
 class ProtocolEngine{
     private:
         std::string className = "ProtocolEngine";
         boost::shared_ptr<Configure> configure;
-        std::map<int, Thread> hThreadPool;//map fd to thread 
+        std::vector<std::thread> threadPool;
     public:
         ProtocolEngine();
         ~ProtocolEngine();
-        int enter(int fd, int event);
-        int run(int fd, int event);
-        int leave(int fd, int event);
+        void post();
 };
 
 #endif //__PROTOCOLENGINE_HPP__
