@@ -38,7 +38,7 @@ class Logger{
         void log(T v){
             this->vecOutput.push_back(boost::lexical_cast<std::string>(v));
             std::string tmp;
-            for(auto s: this->vecOutput){
+            for(auto& s: this->vecOutput){
                 tmp = tmp + s + " ";
             }
             std::cout<<boost::posix_time::microsec_clock::universal_time()<<" "<<this->fileName<<" "<<this->funcName<<" "<<this->lineNum<<" "<<tmp<<" "<<std::endl;
