@@ -26,7 +26,7 @@ void listenRunner(const boost::shared_ptr<Configure>& configure){
         exit(-1);
     }
     listener.serve();
-    listener.shutdown();
+    //listener.shutdown();
 }
 
 void startListenMod(const boost::shared_ptr<Configure>& configure){
