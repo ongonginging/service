@@ -4,42 +4,49 @@
 
 #include <iostream>
 #include <unordered_map>
+#include <queue>
 #include <thread>
 
 #include <boost/shared_ptr.hpp>
 
 #include "Configure.hpp"
+#include "ClientSocket.hpp"
 #include "Connection.hpp"
 #include "ProtoEventHandler.hpp"
 
-class Task{
-    private:
-        boost::shared_ptr<ProtoEventHandler> handler;
-    public:
-        void init();
-        void serve();
-        void shutdown();
-};
+typedef enum ProtoEvType{
+    ProtoEvCreateConnection,
+    ProtoEvCloseConnection,
+}ProtoEvType;
 
 class Processor{
     private:
-        std::unordered_map<int, Connection> conns; // combine connection with socket
-        std::thread thread;
+        boost::shared_ptr<ProtoEventHandler> eventHandler;
+        std::unordered_map<ClientSocket*, Connection*> conns; // combine connection with socket
+        int pipe[2]; //write pointer of clientsocket to pipe. 1.add new connection; 2.close connection
+        friend std::string getProto(const Processor& processor);
     public:
-        Processor();
-        Processor(const Task& task);
+        Processor(const boost::shared_ptr<Configure>& configure);
         ~Processor();
+        void notify(ProtoEvType event, ClientSocket*); // called by engine
+        bool init();
+        void serve();
+        void shutdown();
 };
 
 class ProtoEngine{
     private:
         std::string className = "ProtoEngine";
         boost::shared_ptr<Configure> configure;
-        std::vector<Processor> procPool;
+        std::queue<std::pair<ProtoEvType, ClientSocket*>> qEvent;
+        std::vector<Processor> vecProcessor;
     public:
         ProtoEngine();
         ~ProtoEngine();
-        void post();
+        bool init();
+        void serve();
+        void shutdown();
+        void notify(ProtoEvType event, ClientSocket*); //call by dispatch module
 };
 
 #endif //__PROTOENGINE_HPP__
