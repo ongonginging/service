@@ -21,7 +21,7 @@ class Listener{
         Listener();
         Listener(const boost::shared_ptr<Configure>& configure);
         ~Listener();
-        void init();
+        bool init();
         void serve();
         void shutdown();
 };

@@ -6,6 +6,7 @@
 #include"Configure.hpp"
 #include"ServerSocket.hpp"
 #include"Listener.hpp"
+#include"Log.hpp"
 
 void initConfigure(boost::shared_ptr<Configure>& configure){
     configure->set("port", "9544");
@@ -21,7 +22,9 @@ void startDispatchMod(const boost::shared_ptr<Configure>& configure){
 
 void listenRunner(const boost::shared_ptr<Configure>& configure){
     Listener listener = Listener(configure);
-    listener.init();
+    if (!listener.init()){
+        exit(-1);
+    }
     listener.serve();
     listener.shutdown();
 }

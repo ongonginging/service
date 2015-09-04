@@ -24,3 +24,4 @@ bool Protocol::write(const char*& output_buffer){
 bool Protocol::read( const char*& input_buffer){
 
 }
+

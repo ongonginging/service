@@ -111,7 +111,6 @@ int ServerSocket::open(){
             rv = -1;
             break;//return rv;
         }
-        //std::cout<<"listen on: "<<host<<":"<<port<<std::endl;
         log("listen on", host, ":", port);
     }while(false);
     LOG_LEAVE_FUNC("");

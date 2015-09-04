@@ -10,7 +10,9 @@
 #include"Log.hpp"
 
 ClientSocket* accept(Listener* listener){
+    GLOBAL_LOG_ENTER_FUNC("");
     return listener->serverSocket->accept();
+    GLOBAL_LOG_LEAVE_FUNC("");
 }
 
 void listenCallback(evutil_socket_t fd, short event, void *arg){
@@ -55,12 +57,19 @@ Listener::~Listener(){
     LOG_LEAVE_FUNC("default destructor");
 }
 
-void Listener::init(){
+bool Listener::init(){
     LOG_ENTER_FUNC("");
-    int rv = this->serverSocket->open();
+    bool rv = true;
+    int result = this->serverSocket->open();
+    log("result =", result);
+    if (result<0){
+        rv = false;
+        return rv;
+    }
     this->handler.init();
     this->handler.setListenCallback(listenCallback, this->serverSocket->getFd(), static_cast<void*>(this));
     LOG_LEAVE_FUNC("")
+    return rv;
 }
 
 void Listener::serve(){
