@@ -53,7 +53,7 @@ class Logger{
 };
 
 template<typename... T>
-void LogFn(std::string fileName, std::string funcName, int lineNum, T... v){
+void LogFn(const std::string& fileName, const std::string& funcName, const int& lineNum, T... v){
     Logger(fileName, funcName, lineNum).log(v...);
 }
 
