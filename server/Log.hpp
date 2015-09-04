@@ -35,7 +35,7 @@ class Logger{
             this->lineNum = lineNum;
         }
         template<typename T>
-        void info(T v){
+        void log(T v){
             this->vecOutput.push_back(boost::lexical_cast<std::string>(v));
             std::string tmp;
             for(auto s: this->vecOutput){
@@ -44,15 +44,21 @@ class Logger{
             std::cout<<boost::posix_time::microsec_clock::universal_time()<<" "<<this->fileName<<" "<<this->funcName<<" "<<this->lineNum<<" "<<tmp<<" "<<std::endl;
         }
         template<typename T1, typename... T2>
-        void info(T1 v1, T2... v2){
+        void log(T1 v1, T2... v2){
             this->vecOutput.push_back(boost::lexical_cast<std::string>(v1));
-            info(v2...);
+            log(v2...);
         }
         ~Logger(){
         }
 };
 
-#define LOGGER() Logger(__FILE__, __func__, __LINE__)
+template<typename... T>
+void LogFn(std::string fileName, std::string funcName, int lineNum, T... v){
+    Logger(fileName, funcName, lineNum).log(v...);
+}
 
+#define log(v...){ \
+    LogFn(__FILE__, __func__, __LINE__, v); \
+}
 
 #endif //__LOG_HPP__

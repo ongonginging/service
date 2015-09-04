@@ -44,4 +44,4 @@ $(TARGET): $(OBJS)
 	$(CXX)  -o $@ $(OBJS) $(CPPFLAGS) $(DEP_LIBS) $(DEP_INCS)
 
 clean:
-	rm -rf $(TARGET) $(OBJS) 
+	rm -rf $(TARGET) $(OBJS) nohup.out

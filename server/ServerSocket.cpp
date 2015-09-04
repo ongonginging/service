@@ -56,28 +56,28 @@ int ServerSocket::open(){
     int rv = 0;
     do{
         if(this->fd >= 0){
-            LOGGER().info("fd>0 when openning socket.");
+            log("fd>0 when openning socket.");
             break;//return rv;
         }
         int fd = -1;
         try{
             fd = ::socket(AF_INET, SOCK_STREAM, 0);
         }catch(std::exception& e){
-            LOGGER().info("exception information:", e.what());
+            log("exception information:", e.what());
         }
         if(fd == -1){
-            LOGGER().info("created listen socket failed. errno =", errno);
+            log("created listen socket failed. errno =", errno);
             rv = -1;
             break;//return rv;
         }else{
             this->fd = fd; 
-            LOGGER().info("successful created listen socket", this->fd);
+            log("successful created listen socket", this->fd);
         }
         if(this->reuse){
             int flag = 1;
             int result = setsockopt(this->fd, SOL_SOCKET, SO_REUSEADDR, &flag, sizeof(flag));
             if (result == -1){
-                LOGGER().info("set reuseaddr to listen socket", this->fd, "failed. errno =", errno);
+                log("set reuseaddr to listen socket", this->fd, "failed. errno =", errno);
                 rv = -1;
                 break;//return rv;
             }
@@ -85,7 +85,7 @@ int ServerSocket::open(){
         if(this->nonblocking){
             int result = fcntl(this->fd, F_SETFL, O_NONBLOCK|fcntl(this->fd, F_GETFL));
             if (result == -1){
-                LOGGER().info("set nonblocking to listen socket", this->fd, "failed. errno =", errno);
+                log("set nonblocking to listen socket", this->fd, "failed. errno =", errno);
                 rv = -1;
                 break;//return rv;
             }
@@ -101,18 +101,18 @@ int ServerSocket::open(){
 
         int result = ::bind(this->fd, (const struct sockaddr*)&this->inaddr, sizeof(this->inaddr));
         if (result == -1){
-            LOGGER().info("bind socket", this->fd, "to server address failed. errno =", errno);
+            log("bind socket", this->fd, "to server address failed. errno =", errno);
             rv = -1;
             break;//return rv;
         }
         result = ::listen(this->fd, this->backlog);
         if (result == -1){
-            LOGGER().info("listen socket", this->fd, "failed. errno =", errno);
+            log("listen socket", this->fd, "failed. errno =", errno);
             rv = -1;
             break;//return rv;
         }
         //std::cout<<"listen on: "<<host<<":"<<port<<std::endl;
-        LOGGER().info("listen on", host, ":", port);
+        log("listen on", host, ":", port);
     }while(false);
     LOG_LEAVE_FUNC("");
     return rv;
@@ -125,13 +125,13 @@ int ServerSocket::close(){
     if(this->fd>=0){
         result = ::close(this->fd);
         if (result == -1){
-            LOGGER().info("there is something wrong when closing socket", this->fd, "errno = ", errno);
+            log("there is something wrong when closing socket", this->fd, "errno = ", errno);
             rv = -1;
         }else{
             this->fd = -1;
         }
     }else{
-        LOGGER().info("we would not close client socket. fd<0.");
+        log("we would not close client socket. fd<0.");
         return -1;
     }
     LOG_LEAVE_FUNC("");
