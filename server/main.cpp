@@ -20,16 +20,16 @@ void dispatchRunner(const std::shared_ptr<Configure>& configure){
 void startDispatchMod(const std::shared_ptr<Configure>& configure){
 }
 
-void listenRunner(const std::shared_ptr<Configure>& configure){
+void listenRunner(const std::weak_ptr<Configure>& configure){
+    log("configure.use_count:", configure.use_count());
     Listener listener(configure);
     if (!listener.init()){
         exit(-1);
     }
     listener.serve();
-    //listener.shutdown();
 }
 
-void startListenMod(const std::shared_ptr<Configure>& configure){
+void startListenMod(const std::weak_ptr<Configure>& configure){
     std::thread listenThread(listenRunner, configure);
     listenThread.join();
 }
@@ -53,7 +53,7 @@ int main(int argc, char* argv[]){
     startDispatchMod(configure);
     startServiceEngineMod(configure);
     startProtocolEngineMod(configure);
-    startListenMod(configure);
+    startListenMod(std::weak_ptr<Configure>(configure));
     return rv;
 }
 

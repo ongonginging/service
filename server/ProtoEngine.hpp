@@ -39,7 +39,7 @@ class ProtoEngine{
         std::queue<std::pair<ProtoEvType, ClientSocket*>> qEvent;
         std::vector<Processor> vecProcessor;
     public:
-        ProtoEngine();
+        ProtoEngine(const std::shared_ptr<Configure>& configure);
         ~ProtoEngine();
         bool init();
         void serve();

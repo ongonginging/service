@@ -20,7 +20,7 @@ class Listener{
         friend ClientSocket* accept(Listener* listener);
     public:
         Listener();
-        Listener(const std::shared_ptr<Configure>& configure);
+        Listener(const std::weak_ptr<Configure>& configure);
         ~Listener();
         bool init();
         void serve();
