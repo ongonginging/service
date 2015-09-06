@@ -3,10 +3,11 @@
 #include <thread>
 #include <memory>
 
-#include"Configure.hpp"
-#include"ServerSocket.hpp"
-#include"Listener.hpp"
-#include"Log.hpp"
+#include "Cycle.hpp"
+#include "Configure.hpp"
+#include "ServerSocket.hpp"
+#include "Listener.hpp"
+#include "Log.hpp"
 
 void initConfigure(const std::shared_ptr<Configure>& configure){
     configure->set("port", "9544");
@@ -15,6 +16,12 @@ void initConfigure(const std::shared_ptr<Configure>& configure){
 }
 
 void dispatchRunner(const std::shared_ptr<Configure>& configure){
+    log("configure.use_count:", configure.use_count());
+    Listener listener(configure);
+    if (!listener.init()){
+        exit(-1);
+    }
+    listener.serve();
 }
 
 void startDispatchMod(const std::shared_ptr<Configure>& configure){

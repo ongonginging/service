@@ -62,3 +62,4 @@ void LogFn(const std::string& fileName, const std::string& funcName, const int& 
 }
 
 #endif //__LOG_HPP__
+

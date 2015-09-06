@@ -8,7 +8,6 @@
 class ProtoEventHandler: public IEventHandler{
     private:
         std::string className = "ProtoEventHandler";
-        //struct event* notifyEvent;
     public:
         ProtoEventHandler();
         ~ProtoEventHandler();
