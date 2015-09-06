@@ -30,17 +30,18 @@ Listener::Listener(){
     LOG_LEAVE_FUNC("");
 }
 
-Listener::Listener(std::weak_ptr<Configure> configure){
+Listener::Listener(const std::shared_ptr<Configure>& configure){
     LOG_ENTER_FUNC("");
     int backlog;
     int port;
     std::string host;
 
-    if(configure.expired()){
+    std::weak_ptr<Configure> wp(configure);
+    if(wp.expired()){
         log("configure is expired.");
-        exit(1);
+        exit(-1);
     }
-    this->configure = configure.lock();
+    this->configure = wp.lock();
     std::string tmp;
     if(this->configure->get("backlog", tmp)){
         backlog = boost::lexical_cast<int>(tmp);

@@ -1,11 +1,7 @@
 
 TARGET=service
 ROOT_DIR=$(shell pwd)
-ifeq ($(debug), y)
-	CPPFLAGS=-std=c++11 -gdwarf-2 -DDEBUG -DNO_FCGI_DEFINES -DBOOST_LOG_DYN_LINK -Werror -O0 #-pg
-else
-	CPPFLAGS=-std=c++11 -gdwarf-2 -DNO_FCGI_DEFINES -DBOOST_LOG_DYN_LINK -Werror -O0 #-pg
-endif
+CPPFLAGS=-std=c++11 -gdwarf-2 -DNO_FCGI_DEFINES -DBOOST_LOG_DYN_LINK -Werror -O0 #-pg
 
 DEP_LIBS=-lpthread\
 	-lhiredis\

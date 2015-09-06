@@ -8,7 +8,7 @@
 #include"Listener.hpp"
 #include"Log.hpp"
 
-void initConfigure(std::shared_ptr<Configure>& configure){
+void initConfigure(const std::shared_ptr<Configure>& configure){
     configure->set("port", "9544");
     configure->set("host", "0.0.0.0");
     configure->set("backlog", "1024");
@@ -21,7 +21,7 @@ void startDispatchMod(const std::shared_ptr<Configure>& configure){
 }
 
 void listenRunner(const std::shared_ptr<Configure>& configure){
-    Listener listener = Listener(configure);
+    Listener listener(configure);
     if (!listener.init()){
         exit(-1);
     }
