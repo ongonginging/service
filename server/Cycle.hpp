@@ -12,7 +12,6 @@ class Cycle{
     public:
         Cycle();
         ~Cycle();
-        void setConfigure(const Configure*& configure);
         std::weak_ptr<Configure> getConfigure();
 };
 

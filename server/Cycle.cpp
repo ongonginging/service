@@ -1,9 +1,11 @@
 
 #include "Cycle.hpp"
 #include "Configure.hpp"
+#include "Log.hpp"
 
 Cycle::Cycle(){
     this->configure = std::make_shared<Configure>();
+    log("use_count: ", this->configure.use_count());
 }
 
 Cycle::~Cycle(){

@@ -32,7 +32,12 @@ void Dispatcher::notifyClientSocketEv(const Dispatcher::EVENT& id, const ClientS
     LOG_LEAVE_FUNC("");
 }
 
-void Dispatcher::serve(void){
+bool Dispatcher::init(){
+    bool rv = true;
+    return rv;
+}
+
+void Dispatcher::serve(){
     LOG_ENTER_FUNC("");
     while(true){
         std::unique_lock<std::mutex> lck(this->mtx);
@@ -47,5 +52,8 @@ void Dispatcher::serve(void){
         }
     }
     LOG_LEAVE_FUNC("");
+}
+
+void Dispatcher::shutdown(){
 }
 

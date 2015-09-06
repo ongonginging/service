@@ -30,8 +30,10 @@ class Dispatcher{
         Dispatcher(const std::weak_ptr<Configure>& configure);
         ~Dispatcher();
 
+        bool init();
         void notifyClientSocketEv(const EVENT& id, const ClientSocket*&);
-        void serve(void);
+        void serve();
+        void shutdown();
 };
 
 #endif //__DISPATCHER_HPP__
