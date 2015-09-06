@@ -1,6 +1,7 @@
 
 #include<unistd.h>
 
+#include<memory>
 #include<boost/lexical_cast.hpp>
 
 #include"Listener.hpp"
@@ -29,14 +30,17 @@ Listener::Listener(){
     LOG_LEAVE_FUNC("");
 }
 
-Listener::Listener(const boost::shared_ptr<Configure>& configure){
+Listener::Listener(std::weak_ptr<Configure> configure){
     LOG_ENTER_FUNC("");
     int backlog;
     int port;
     std::string host;
 
-    this->configure = configure;
-
+    if(configure.expired()){
+        log("configure is expired.");
+        exit(1);
+    }
+    this->configure = configure.lock();
     std::string tmp;
     if(this->configure->get("backlog", tmp)){
         backlog = boost::lexical_cast<int>(tmp);
@@ -47,8 +51,7 @@ Listener::Listener(const boost::shared_ptr<Configure>& configure){
     if(this->configure->get("host", tmp)){
         host = tmp;
     }
-    boost::shared_ptr<ServerSocket> serverSocket(new ServerSocket(port, host, backlog));
-    this->serverSocket = serverSocket;
+    this->serverSocket = std::make_shared<ServerSocket>(port, host, backlog);
     LOG_LEAVE_FUNC("");
 }
 

@@ -1,8 +1,10 @@
 
+#include <memory>
 #include <event.h>
+
 #include "Heartbeat.hpp"
 
-bool Heartbeat::init(const boost::shared_ptr<Configure>& configure){
+bool Heartbeat::init(const std::shared_ptr<Configure>& configure){
 
 }
 

@@ -1,6 +1,7 @@
 
 #include <iostream>
 #include <map>
+#include <memory>
 #include <unordered_map>
 #include <utility>
 #include <thread>
@@ -10,7 +11,7 @@
 
 #include "ProtoEngine.hpp"
 
-Processor::Processor(const boost::shared_ptr<Configure>& configure){
+Processor::Processor(const std::shared_ptr<Configure>& configure){
 }
 
 Processor::~Processor(){

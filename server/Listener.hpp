@@ -3,8 +3,9 @@
 #define __LISTENER_HPP__
 
 #include <iostream>
+#include <memory>
+
 #include <event.h>
-#include <boost/shared_ptr.hpp>
 
 #include "Configure.hpp"
 #include "ServerSocket.hpp"
@@ -13,13 +14,13 @@
 class Listener{
     private:
         std::string className = "Listener";
-        boost::shared_ptr<Configure> configure;
-        boost::shared_ptr<ServerSocket> serverSocket;
+        std::shared_ptr<Configure> configure;
+        std::shared_ptr<ServerSocket> serverSocket;
         ListenEventHandler handler;
         friend ClientSocket* accept(Listener* listener);
     public:
         Listener();
-        Listener(const boost::shared_ptr<Configure>& configure);
+        Listener(std::weak_ptr<Configure> configure);
         ~Listener();
         bool init();
         void serve();

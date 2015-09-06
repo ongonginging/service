@@ -2,16 +2,14 @@
 #ifndef __SERVERSOCKET_HPP__
 #define __SERVERSOCKET_HPP__
 
-#include<iostream>
+#include <iostream>
 
-#include<sys/types.h>
-#include<sys/stat.h>
-#include<sys/socket.h>
-#include<netinet/in.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
 
-#include<boost/shared_ptr.hpp>
-
-#include"ClientSocket.hpp"
+#include "ClientSocket.hpp"
 
 class ServerSocket{
     private:
