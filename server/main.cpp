@@ -36,18 +36,11 @@ void listenRunner(const std::weak_ptr<Configure>& configure){
     listener.serve();
 }
 
-void ProtoEngineRunner(const std::weak_ptr<Configure>& configure){
-}
-
-void serviceEngineRunner(const std::weak_ptr<Configure>& configure){
-}
-
 template<typename Fn>
 void startModule(Fn fn, const std::weak_ptr<Configure>& configure){
     try{
         std::thread t(fn, configure);
         t.detach();
-        //t.join(); //exception.what(): Invalid argument
     }catch(const std::exception& e){
         log("exception.what():", e.what());
     }
@@ -59,8 +52,6 @@ int main(int argc, char* argv[]){
     initConfigure(configure);
     startModule(dispatchRunner, configure);
     startModule(listenRunner, configure);
-    startModule(ProtoEngineRunner, configure);
-    startModule(serviceEngineRunner, configure);
     while(true){
         log("in loop");
         sleep(1);

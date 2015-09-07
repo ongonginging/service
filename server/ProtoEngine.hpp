@@ -14,8 +14,8 @@
 #include "ProtoEventHandler.hpp"
 
 typedef enum ProtoEvType{
-    ProtoEvCreateConnection,
-    ProtoEvCloseConnection,
+    CreateConnection,
+    CloseConnection,
 }ProtoEvType;
 
 class Processor{
