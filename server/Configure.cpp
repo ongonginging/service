@@ -4,26 +4,20 @@
 #include"Configure.hpp"
 #include"Log.hpp"
 
-#if 1
 Configure::Configure(void){
     LOG_ENTER_FUNC("default constructor");
     LOG_LEAVE_FUNC("default constructor");
 }
-#endif
 
-#if 1
 Configure::Configure(bool flags){
     LOG_ENTER_FUNC("bool flags");
     LOG_LEAVE_FUNC("bool flags");
 }
-#endif
 
-#if 1
 Configure::~Configure(void){
     LOG_ENTER_FUNC("default destructor");
     LOG_LEAVE_FUNC("default destructor");
 }
-#endif
 
 void Configure::set(const std::string& key, const std::string& value){
     LOG_ENTER_FUNC("");

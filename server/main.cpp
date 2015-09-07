@@ -2,6 +2,8 @@
 #include <iostream>
 #include <thread>
 #include <memory>
+#include <vector>
+#include <functional>
 
 #include "Cycle.hpp"
 #include "Configure.hpp"
@@ -25,11 +27,6 @@ void dispatchRunner(const std::weak_ptr<Configure>& configure){
     disptacher.serve();
 }
 
-void startDispatchMod(const std::weak_ptr<Configure>& configure){
-    std::thread dispatchThread(dispatchRunner, configure);
-    dispatchThread.join();
-}
-
 void listenRunner(const std::weak_ptr<Configure>& configure){
     log("configure.use_count:", configure.use_count());
     Listener listener(configure);
@@ -39,33 +36,35 @@ void listenRunner(const std::weak_ptr<Configure>& configure){
     listener.serve();
 }
 
-void startListenMod(const std::weak_ptr<Configure>& configure){
-    std::thread listenThread(listenRunner, configure);
-    listenThread.join();
+void ProtoEngineRunner(const std::weak_ptr<Configure>& configure){
 }
 
-void ProtoEngineRunner(const std::shared_ptr<Configure>& configure){
+void serviceEngineRunner(const std::weak_ptr<Configure>& configure){
 }
 
-void startProtoEngineMod(const std::shared_ptr<Configure>& configure){
-}
-
-void serviceEngineRunner(const std::shared_ptr<Configure>& configure){
-}
-
-void startServiceEngineMod(const std::shared_ptr<Configure>& configure){
+template<typename Fn>
+void startModule(Fn fn, const std::weak_ptr<Configure>& configure){
+    try{
+        std::thread t(fn, configure);
+        t.detach();
+        //t.join(); //exception.what(): Invalid argument
+    }catch(const std::exception& e){
+        log("exception.what():", e.what());
+    }
 }
 
 int main(int argc, char* argv[]){
-    log("enter ...");
     int rv = 0;
     std::shared_ptr<Configure> configure(new Configure());
     initConfigure(configure);
-    startDispatchMod(configure);
-    startProtoEngineMod(configure);
-    startServiceEngineMod(configure);
-    startListenMod(std::weak_ptr<Configure>(configure));
-    log("leave ...");
+    startModule(dispatchRunner, configure);
+    startModule(listenRunner, configure);
+    startModule(ProtoEngineRunner, configure);
+    startModule(serviceEngineRunner, configure);
+    while(true){
+        log("in loop");
+        sleep(1);
+    }
     return rv;
 }
 
