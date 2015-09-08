@@ -18,7 +18,7 @@ class Listener{
         std::string className = "Listener";
         std::shared_ptr<Manager> manager;
         std::shared_ptr<ServerSocket> serverSocket;
-        ListenEventHandler handler;
+        ListenEventHandler eventHandler;
         friend ClientSocket* accept(Listener* listener);
     public:
         Listener();

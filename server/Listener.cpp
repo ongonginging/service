@@ -35,7 +35,7 @@ Listener::Listener(const std::weak_ptr<Manager>& manager){
     int port;
     std::string host;
     if(manager.expired()){
-        //todo: notify main thread to handler error.
+        //todo: notify main thread to eventHandler error.
         exit(1);
     }
     this->manager = manager.lock();
@@ -68,22 +68,22 @@ bool Listener::init(){
         rv = false;
         return rv;
     }
-    this->handler.init();
-    this->handler.setListenCallback(listenCallback, this->serverSocket->getFd(), reinterpret_cast<void*>(this));
+    this->eventHandler.init();
+    this->eventHandler.setListenCallback(listenCallback, this->serverSocket->getFd(), reinterpret_cast<void*>(this));
     LOG_LEAVE_FUNC("")
         return rv;
 }
 
 void Listener::serve(){
     LOG_ENTER_FUNC("");
-    this->handler.serve();
+    this->eventHandler.serve();
     LOG_LEAVE_FUNC("")
 }
 
 void Listener::shutdown(){
     LOG_ENTER_FUNC("");
     int rv = this->serverSocket->close();
-    this->handler.shutdown();
+    this->eventHandler.shutdown();
     LOG_LEAVE_FUNC("")
 }
 

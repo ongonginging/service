@@ -8,6 +8,7 @@
 #include <thread>
 #include <memory>
 
+#include "ITask.hpp"
 #include "Manager.hpp"
 #include "ClientSocket.hpp"
 #include "Connection.hpp"
@@ -15,11 +16,29 @@
 
 struct Manager;
 
+class CreateConnTask:public ITask{
+    private:
+        EVENT event;
+        ClientSocket* cs;
+    public:
+        void run();
+};
+
+class CloseConnTask:public ITask{
+    private:
+        EVENT event;
+        ClientSocket* cs;
+    public:
+        void run();
+};
+
 class WorkThread{
     private:
+        std::string className = "WorkThread";
         std::shared_ptr<ProtoEventHandler> eventHandler;
-        std::unordered_map<ClientSocket*, Connection*> conns; // combine connection with socket
-        int pipe[2];
+        std::queue<std::pair<EVENT, ClientSocket*>> eventQueue;
+        int connCtrlChan[2];
+        int threadCtrlChan[2];
     public:
         WorkThread(const std::shared_ptr<Manager>& manager);
         ~WorkThread();
@@ -33,7 +52,7 @@ class ProtoEngine{
     private:
         std::string className = "ProtoEngine";
         std::shared_ptr<Manager> manager;
-        std::vector<WorkThread> workers;
+        std::vector<WorkThread> workThreadVec;
     public:
         ProtoEngine(const std::shared_ptr<Manager>& manager);
         ~ProtoEngine();
