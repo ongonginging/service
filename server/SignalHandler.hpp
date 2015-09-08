@@ -1,7 +1,8 @@
 
-#ifndef __SERVICEENGINE_HPP__
-#define __SERVICEENGINE_HPP__
+#ifndef __SIGNALHANDLER_HPP__
+#define __SIGNALHANDLER_HPP__
 
+class SignalHandler{
+};
 
-
-#endif //__SERVICEENGINE_HPP__
+#endif //__SIGNALHANDLER_HPP__

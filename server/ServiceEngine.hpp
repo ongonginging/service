@@ -17,7 +17,7 @@ class ServiceEngine{
     public:
         ServiceEngine();
         ~ServiceEngine();
-        void post();
+        void notify();
 };
 
 #endif //__SERVICEENGINE_HPP__
