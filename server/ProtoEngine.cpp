@@ -10,9 +10,10 @@
 #include <atomic>
 
 #include "Log.hpp"
+#include "Cycle.hpp"
 #include "ProtoEngine.hpp"
-
-Processor::Processor(const std::shared_ptr<Configure>& configure){
+/*
+Processor::Processor(const std::shared_ptr<Cycle>& cycle){
 }
 
 Processor::~Processor(){
@@ -27,19 +28,15 @@ void Processor::serve(){
 void Processor::shutdown(){
 }
 
-void Processor::notify(ProtoEvType event, ClientSocket* data){
+void Processor::notify(EVENT event, ClientSocket* data){
 }
 
-ProtoEngine::ProtoEngine(const std::shared_ptr<Configure>& configure){
+*/
 
-    std::weak_ptr<Configure>wp(configure);
-    if(wp.expired()){
-        exit(1);
-    }
-    this->configure = wp.lock();
-    log("configure.use_count:",configure.use_count());
-    log("wp.use_count:",wp.use_count());
-    log("this->configure.use_count:",this->configure.use_count());
+ProtoEngine::ProtoEngine(const std::shared_ptr<Cycle>& cycle){
+    this->cycle = cycle;
+    log("cycle.use_count:",cycle.use_count());
+    log("this->cycle.use_count:",this->cycle.use_count());
 }
 
 ProtoEngine::~ProtoEngine(){
@@ -55,6 +52,6 @@ void ProtoEngine::serve(){
 void ProtoEngine::shutdown(){
 }
 
-void ProtoEngine::notify(ProtoEvType event, ClientSocket* data){
+void ProtoEngine::notify(EVENT event, ClientSocket* data){
 }
 

@@ -34,3 +34,4 @@ class Protocol{//:public IProtocol{
 };
 
 #endif //__PROTOCOL_HPP__
+

@@ -7,7 +7,6 @@
 #include"Listener.hpp"
 #include"ServerSocket.hpp"
 #include"ClientSocket.hpp"
-#include"Configure.hpp"
 #include"Log.hpp"
 
 ClientSocket* accept(Listener* listener){
@@ -18,7 +17,7 @@ ClientSocket* accept(Listener* listener){
 
 void listenCallback(evutil_socket_t fd, short event, void *arg){
     GLOBAL_LOG_ENTER_FUNC("");
-    Listener* listener = static_cast<Listener*>(arg);
+    Listener* listener = reinterpret_cast<Listener*>(arg);
     while(auto cs = accept(listener)){
         log("accept new client: ", "fd(", cs->getFd(), ")", cs->getHost(),":", cs->getPort());
     }
@@ -30,27 +29,22 @@ Listener::Listener(){
     LOG_LEAVE_FUNC("");
 }
 
-Listener::Listener(const std::weak_ptr<Configure>& configure){
+Listener::Listener(const std::shared_ptr<Cycle>& cycle){
     LOG_ENTER_FUNC("");
     int backlog;
     int port;
     std::string host;
 
-    if(configure.expired()){
-        log("configure is expired.");
-        exit(-1);
-    }
-    log("configure.use_count:",configure.use_count());
-    this->configure = configure.lock();
-    log("this->configure.use_count:",this->configure.use_count());
+    this->cycle = cycle;
+    log("this->cycle.use_count:",this->cycle.use_count());
     std::string tmp;
-    if(this->configure->get("backlog", tmp)){
+    if(this->cycle->getConfig("backlog", tmp)){
         backlog = boost::lexical_cast<int>(tmp);
     }
-    if(this->configure->get("port", tmp)){
+    if(this->cycle->getConfig("port", tmp)){
         port = boost::lexical_cast<int>(tmp);
     }
-    if(this->configure->get("host", tmp)){
+    if(this->cycle->getConfig("host", tmp)){
         host = tmp;
     }
     this->serverSocket = std::make_shared<ServerSocket>(port, host, backlog);
@@ -72,9 +66,9 @@ bool Listener::init(){
         return rv;
     }
     this->handler.init();
-    this->handler.setListenCallback(listenCallback, this->serverSocket->getFd(), static_cast<void*>(this));
+    this->handler.setListenCallback(listenCallback, this->serverSocket->getFd(), reinterpret_cast<void*>(this));
     LOG_LEAVE_FUNC("")
-    return rv;
+        return rv;
 }
 
 void Listener::serve(){

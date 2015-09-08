@@ -3,12 +3,16 @@
 #define __HEARTBEAT_HPP__
 
 #include <memory>
-#include "Configure.hpp"
+#include "Cycle.hpp"
 #include "IEventHandler.hpp"
 
+struct Cycle;
+
 class Heartbeat:public IEventHandler{
+    private:
+        std::shared_ptr<Cycle> cycle;
     public:
-        bool init(const std::shared_ptr<Configure>& configure);
+        bool init(const std::shared_ptr<Cycle>& cycle);
         void send();
         void shutdown();
 };

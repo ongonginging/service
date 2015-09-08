@@ -8,15 +8,11 @@
 #include "Log.hpp"
 
 Cycle::Cycle(){
-    this->configure = std::make_shared<Configure>();
-    log("use_count: ", this->configure.use_count());
-    this->listener = std::make_shared<Listener>(this->configure);
 }
 
 Cycle::~Cycle(){
 }
 
-std::weak_ptr<Configure> Cycle::getConfigure(){
-    return std::weak_ptr<Configure>(this->configure);
+bool Cycle::getConfig(const std::string& key, std::string& value){
+    return this->configure->get(key, value);
 }
-

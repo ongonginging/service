@@ -9,31 +9,29 @@
 #include <thread>
 #include <condition_variable>
 
-#include "Configure.hpp"
+#include "Cycle.hpp"
+#include "Event.hpp"
 #include "ClientSocket.hpp"
 
+struct Cycle;
+
 class Dispatcher{
-    public:
-        typedef enum EVENT{
-            CREATE_CONNECTION = 0,
-            DELETE_CONNECTION = 1,
-            DECODE_PROTOCOL   = 2,
-            ENCODE_PROTOCOL   = 3,
-        }EVENT;
     private:
         std::string className = "Dispatcher";
-        std::shared_ptr<Configure> configure;
+        std::shared_ptr<Cycle> cycle;
+        /*
         std::mutex mtx;
         std::condition_variable cv;
         std::queue<std::pair<EVENT, ClientSocket*>> csEvents;
+        */
     public:
-        Dispatcher(const std::weak_ptr<Configure>& configure);
+        Dispatcher(const std::shared_ptr<Cycle>& cycle);
         ~Dispatcher();
-
         bool init();
-        void notifyClientSocketEv(const EVENT& id, const ClientSocket*&);
         void serve();
         void shutdown();
+        void notifyProtoEngine(const EVENT& event, const ClientSocket*&);
+        void notifyServiceEngine(const EVENT& event, const std::string proto);
 };
 
 #endif //__DISPATCHER_HPP__

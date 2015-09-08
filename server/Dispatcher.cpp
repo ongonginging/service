@@ -8,12 +8,13 @@
 #include <thread>
 #include <condition_variable>
 
-#include "Dispatcher.hpp"
-#include "Configure.hpp"
-#include "ClientSocket.hpp"
 #include "Log.hpp"
+#include "Cycle.hpp"
+#include "Event.hpp"
+#include "Dispatcher.hpp"
+#include "ClientSocket.hpp"
 
-Dispatcher::Dispatcher(const std::weak_ptr<Configure>& configure){
+Dispatcher::Dispatcher(const std::shared_ptr<Cycle>& cycle){
     LOG_ENTER_FUNC("");
     LOG_LEAVE_FUNC("");
 }
@@ -23,12 +24,19 @@ Dispatcher::~Dispatcher(){
     LOG_LEAVE_FUNC("");
 }
 
-void Dispatcher::notifyClientSocketEv(const Dispatcher::EVENT& id, const ClientSocket*& cs){
+void Dispatcher::notifyProtoEngine(const EVENT& id, const ClientSocket*& cs){
     LOG_ENTER_FUNC("");
+    /*
     std::unique_lock<std::mutex> lck(this->mtx);
     this->cv.notify_one(); 
     log("notify event");
-    this->csEvents.push(std::pair<Dispatcher::EVENT, ClientSocket*>(id, const_cast<ClientSocket*>(cs)));
+    this->csEvents.push(std::pair<EVENT, ClientSocket*>(id, const_cast<ClientSocket*>(cs)));
+    */
+    LOG_LEAVE_FUNC("");
+}
+
+void Dispatcher::notifyServiceEngine(const EVENT& id, const std::string protocol){
+    LOG_ENTER_FUNC("");
     LOG_LEAVE_FUNC("");
 }
 
@@ -39,6 +47,7 @@ bool Dispatcher::init(){
 
 void Dispatcher::serve(){
     LOG_ENTER_FUNC("");
+    /*
     while(true){
         std::unique_lock<std::mutex> lck(this->mtx);
         while(this->csEvents.size() == 0){
@@ -51,6 +60,7 @@ void Dispatcher::serve(){
             log("process event.");
         }
     }
+    */
     LOG_LEAVE_FUNC("");
 }
 

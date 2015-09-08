@@ -6,10 +6,14 @@
 #include <vector>
 #include <thread>
 
+#include "Cycle.hpp"
+
+struct Cycle;
+
 class ServiceEngine{
     private:
         std::string className = "ServiceEngine";
-        std::vector<std::thread> threadPool;
+        std::shared_ptr<Cycle> cycle;
     public:
         ServiceEngine();
         ~ServiceEngine();

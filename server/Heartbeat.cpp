@@ -3,8 +3,9 @@
 #include <event.h>
 
 #include "Heartbeat.hpp"
+#include "Cycle.hpp"
 
-bool Heartbeat::init(const std::shared_ptr<Configure>& configure){
+bool Heartbeat::init(const std::shared_ptr<Cycle>& cycle){
 
 }
 
