@@ -16,7 +16,7 @@ class Dispatcher;
 class ProtoEngine;
 class ServiceEngine;
 
-struct Cycle{
+struct Manager{
     public:
         std::shared_ptr<Configure> configure;
         std::shared_ptr<Dispatcher> dispatcher;
@@ -24,8 +24,8 @@ struct Cycle{
         std::shared_ptr<ProtoEngine> protoEngine;
         std::shared_ptr<ServiceEngine> serviceEngine;
 
-        Cycle();
-        ~Cycle();
+        Manager();
+        ~Manager();
         void serve();
         bool getConfig(const std::string& key, std::string& value);
 };

@@ -5,15 +5,15 @@
 #include <vector>
 #include <functional>
 
-#include "Cycle.hpp"
+#include "Manager.hpp"
 #include "Configure.hpp"
 #include "ServerSocket.hpp"
 #include "Listener.hpp"
 #include "Dispatcher.hpp"
 #include "Log.hpp"
 
-bool initConfigure(const std::shared_ptr<Cycle>& cycle){
-    std::shared_ptr<Configure>& configure = cycle->configure;
+bool initConfigure(const std::shared_ptr<Manager>& manager){
+    std::shared_ptr<Configure>& configure = manager->configure;
     log("0000000000 configure.use_count() = ", configure.use_count());
     configure->set("port", "9544");
     configure->set("host", "0.0.0.0");
@@ -21,18 +21,18 @@ bool initConfigure(const std::shared_ptr<Cycle>& cycle){
     return true;
 }
 
-void dispatchRunner(const std::weak_ptr<Cycle>& cycle){
-    log("22222222222 cycle.use_count:", cycle.use_count());
-    Dispatcher disptacher(cycle);
+void dispatchRunner(const std::weak_ptr<Manager>& manager){
+    log("22222222222 manager.use_count:", manager.use_count());
+    Dispatcher disptacher(manager);
     if (!disptacher.init()){
         exit(-1);
     }
     disptacher.serve();
 }
 
-void listenRunner(const std::weak_ptr<Cycle>& cycle){
-    log("22222222222 cycle.use_count:", cycle.use_count());
-    Listener listener(cycle);
+void listenRunner(const std::weak_ptr<Manager>& manager){
+    log("22222222222 manager.use_count:", manager.use_count());
+    Listener listener(manager);
     if (!listener.init()){
         exit(-1);
     }
@@ -40,10 +40,10 @@ void listenRunner(const std::weak_ptr<Cycle>& cycle){
 }
 
 template<typename Fn>
-void startModule(Fn fn, const std::weak_ptr<Cycle>& cycle){
-    log("11111111111 cycle.use_count:", cycle.use_count());
+void startModule(Fn fn, const std::weak_ptr<Manager>& manager){
+    log("11111111111 manager.use_count:", manager.use_count());
     try{
-        std::thread t(fn, cycle);
+        std::thread t(fn, manager);
         t.detach();
     }catch(const std::exception& e){
         log("exception.what():", e.what());
@@ -52,12 +52,12 @@ void startModule(Fn fn, const std::weak_ptr<Cycle>& cycle){
 
 int main(int argc, char* argv[]){
     int rv = 0;
-    std::shared_ptr<Cycle> cycle = std::make_shared<Cycle>();
-    cycle->configure = std::make_shared<Configure>();
-    initConfigure(cycle);
-    startModule(dispatchRunner, cycle);
-    startModule(listenRunner, cycle);
-    cycle->serve();
+    std::shared_ptr<Manager> manager = std::make_shared<Manager>();
+    manager->configure = std::make_shared<Configure>();
+    initConfigure(manager);
+    startModule(dispatchRunner, manager);
+    startModule(listenRunner, manager);
+    manager->serve();
     return rv;
 }
 

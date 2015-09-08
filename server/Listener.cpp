@@ -29,25 +29,25 @@ Listener::Listener(){
     LOG_LEAVE_FUNC("");
 }
 
-Listener::Listener(const std::weak_ptr<Cycle>& cycle){
+Listener::Listener(const std::weak_ptr<Manager>& manager){
     LOG_ENTER_FUNC("");
     int backlog;
     int port;
     std::string host;
-    if(cycle.expired()){
+    if(manager.expired()){
         //todo: notify main thread to handler error.
         exit(1);
     }
-    this->cycle = cycle.lock();
-    log("3333333333333 this->cycle.use_count:",this->cycle.use_count());
+    this->manager = manager.lock();
+    log("3333333333333 this->manager.use_count:",this->manager.use_count());
     std::string tmp;
-    if(this->cycle->getConfig("backlog", tmp)){
+    if(this->manager->getConfig("backlog", tmp)){
         backlog = boost::lexical_cast<int>(tmp);
     }
-    if(this->cycle->getConfig("port", tmp)){
+    if(this->manager->getConfig("port", tmp)){
         port = boost::lexical_cast<int>(tmp);
     }
-    if(this->cycle->getConfig("host", tmp)){
+    if(this->manager->getConfig("host", tmp)){
         host = tmp;
     }
     this->serverSocket = std::make_shared<ServerSocket>(port, host, backlog);

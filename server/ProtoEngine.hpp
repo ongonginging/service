@@ -8,12 +8,12 @@
 #include <thread>
 #include <memory>
 
-#include "Cycle.hpp"
+#include "Manager.hpp"
 #include "ClientSocket.hpp"
 #include "Connection.hpp"
 #include "ProtoEventHandler.hpp"
 
-struct Cycle;
+struct Manager;
 
 class WorkThread{
     private:
@@ -21,7 +21,7 @@ class WorkThread{
         std::unordered_map<ClientSocket*, Connection*> conns; // combine connection with socket
         int pipe[2];
     public:
-        WorkThread(const std::shared_ptr<Cycle>& cycle);
+        WorkThread(const std::shared_ptr<Manager>& manager);
         ~WorkThread();
         void notify(EVENT event, ClientSocket*); // called by engine
         bool init();
@@ -32,10 +32,10 @@ class WorkThread{
 class ProtoEngine{
     private:
         std::string className = "ProtoEngine";
-        std::shared_ptr<Cycle> cycle;
+        std::shared_ptr<Manager> manager;
         std::vector<WorkThread> workers;
     public:
-        ProtoEngine(const std::shared_ptr<Cycle>& cycle);
+        ProtoEngine(const std::shared_ptr<Manager>& manager);
         ~ProtoEngine();
         bool init();
         void serve();

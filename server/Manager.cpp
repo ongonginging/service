@@ -1,5 +1,5 @@
 
-#include "Cycle.hpp"
+#include "Manager.hpp"
 #include "Configure.hpp"
 #include "Listener.hpp"
 #include "Dispatcher.hpp"
@@ -7,16 +7,16 @@
 #include "ServiceEngine.hpp"
 #include "Log.hpp"
 
-Cycle::Cycle(){
+Manager::Manager(){
 }
 
-Cycle::~Cycle(){
+Manager::~Manager(){
 }
 
-void Cycle::serve(){
+void Manager::serve(){
     this->dispatcher->serve();
 }
 
-bool Cycle::getConfig(const std::string& key, std::string& value){
+bool Manager::getConfig(const std::string& key, std::string& value){
     return this->configure->get(key, value);
 }

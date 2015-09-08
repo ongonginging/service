@@ -9,18 +9,18 @@
 #include <condition_variable>
 
 #include "Log.hpp"
-#include "Cycle.hpp"
+#include "Manager.hpp"
 #include "Event.hpp"
 #include "Dispatcher.hpp"
 #include "ClientSocket.hpp"
 
-Dispatcher::Dispatcher(const std::weak_ptr<Cycle>& cycle){
+Dispatcher::Dispatcher(const std::weak_ptr<Manager>& manager){
     LOG_ENTER_FUNC("");
-    if(cycle.expired()){
+    if(manager.expired()){
         exit(1);
     }
-    this->cycle = cycle.lock();
-    log("cycle.use_count()", this->cycle.use_count());
+    this->manager = manager.lock();
+    log("manager.use_count()", this->manager.use_count());
     LOG_LEAVE_FUNC("");
 }
 

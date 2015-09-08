@@ -10,10 +10,10 @@
 #include <atomic>
 
 #include "Log.hpp"
-#include "Cycle.hpp"
+#include "Manager.hpp"
 #include "ProtoEngine.hpp"
 
-WorkThread::WorkThread(const std::shared_ptr<Cycle>& cycle){
+WorkThread::WorkThread(const std::shared_ptr<Manager>& manager){
 }
 
 WorkThread::~WorkThread(){
@@ -31,10 +31,10 @@ void WorkThread::shutdown(){
 void WorkThread::notify(EVENT event, ClientSocket* data){
 }
 
-ProtoEngine::ProtoEngine(const std::shared_ptr<Cycle>& cycle){
-    this->cycle = cycle;
-    log("cycle.use_count:",cycle.use_count());
-    log("this->cycle.use_count:",this->cycle.use_count());
+ProtoEngine::ProtoEngine(const std::shared_ptr<Manager>& manager){
+    this->manager = manager;
+    log("manager.use_count:",manager.use_count());
+    log("this->manager.use_count:",this->manager.use_count());
 }
 
 ProtoEngine::~ProtoEngine(){

@@ -7,22 +7,22 @@
 
 #include <event.h>
 
-#include "Cycle.hpp"
+#include "Manager.hpp"
 #include "ServerSocket.hpp"
 #include "ListenEventHandler.hpp"
 
-struct Cycle;
+struct Manager;
 
 class Listener{
     private:
         std::string className = "Listener";
-        std::shared_ptr<Cycle> cycle;
+        std::shared_ptr<Manager> manager;
         std::shared_ptr<ServerSocket> serverSocket;
         ListenEventHandler handler;
         friend ClientSocket* accept(Listener* listener);
     public:
         Listener();
-        Listener(const std::weak_ptr<Cycle>& cycle);
+        Listener(const std::weak_ptr<Manager>& manager);
         ~Listener();
         bool init();
         void serve();

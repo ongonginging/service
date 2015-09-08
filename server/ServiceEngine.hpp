@@ -6,14 +6,14 @@
 #include <vector>
 #include <thread>
 
-#include "Cycle.hpp"
+#include "Manager.hpp"
 
-struct Cycle;
+struct Manager;
 
 class ServiceEngine{
     private:
         std::string className = "ServiceEngine";
-        std::shared_ptr<Cycle> cycle;
+        std::shared_ptr<Manager> manager;
     public:
         ServiceEngine();
         ~ServiceEngine();

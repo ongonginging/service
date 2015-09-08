@@ -3,17 +3,17 @@
 #define __HEARTBEAT_HPP__
 
 #include <memory>
-#include "Cycle.hpp"
+#include "Manager.hpp"
 
-struct Cycle;
+struct Manager;
 
 class Heartbeat{
     private:
         std::string className = "HeartBeat";
         struct event_base* base; 
-        std::shared_ptr<Cycle> cycle;
+        std::shared_ptr<Manager> manager;
     public:
-        bool init(const std::shared_ptr<Cycle>& cycle);
+        bool init(const std::shared_ptr<Manager>& manager);
         void serve();
         void shutdown();
 };

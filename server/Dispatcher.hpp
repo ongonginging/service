@@ -9,23 +9,23 @@
 #include <thread>
 #include <condition_variable>
 
-#include "Cycle.hpp"
+#include "Manager.hpp"
 #include "Event.hpp"
 #include "ClientSocket.hpp"
 
-struct Cycle;
+struct Manager;
 
 class Dispatcher{
     private:
         std::string className = "Dispatcher";
-        std::shared_ptr<Cycle> cycle;
+        std::shared_ptr<Manager> manager;
         /*
         std::mutex mtx;
         std::condition_variable cv;
         std::queue<std::pair<EVENT, ClientSocket*>> csEvents;
         */
     public:
-        Dispatcher(const std::weak_ptr<Cycle>& cycle);
+        Dispatcher(const std::weak_ptr<Manager>& manager);
         ~Dispatcher();
         bool init();
         void serve();
