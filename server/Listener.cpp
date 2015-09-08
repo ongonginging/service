@@ -4,10 +4,10 @@
 #include<memory>
 #include<boost/lexical_cast.hpp>
 
+#include"Log.hpp"
 #include"Listener.hpp"
 #include"ServerSocket.hpp"
 #include"ClientSocket.hpp"
-#include"Log.hpp"
 
 ClientSocket* accept(Listener* listener){
     GLOBAL_LOG_ENTER_FUNC("");
@@ -29,14 +29,17 @@ Listener::Listener(){
     LOG_LEAVE_FUNC("");
 }
 
-Listener::Listener(const std::shared_ptr<Cycle>& cycle){
+Listener::Listener(const std::weak_ptr<Cycle>& cycle){
     LOG_ENTER_FUNC("");
     int backlog;
     int port;
     std::string host;
-
-    this->cycle = cycle;
-    log("this->cycle.use_count:",this->cycle.use_count());
+    if(cycle.expired()){
+        //todo: notify main thread to handler error.
+        exit(1);
+    }
+    this->cycle = cycle.lock();
+    log("3333333333333 this->cycle.use_count:",this->cycle.use_count());
     std::string tmp;
     if(this->cycle->getConfig("backlog", tmp)){
         backlog = boost::lexical_cast<int>(tmp);

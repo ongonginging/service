@@ -26,6 +26,7 @@ struct Cycle{
 
         Cycle();
         ~Cycle();
+        void serve();
         bool getConfig(const std::string& key, std::string& value);
 };
 

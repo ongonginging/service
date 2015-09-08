@@ -12,26 +12,24 @@
 #include "Log.hpp"
 #include "Cycle.hpp"
 #include "ProtoEngine.hpp"
-/*
-Processor::Processor(const std::shared_ptr<Cycle>& cycle){
+
+WorkThread::WorkThread(const std::shared_ptr<Cycle>& cycle){
 }
 
-Processor::~Processor(){
+WorkThread::~WorkThread(){
 }
 
-bool Processor::init(){
+bool WorkThread::init(){
 }
 
-void Processor::serve(){
+void WorkThread::serve(){
 }
 
-void Processor::shutdown(){
+void WorkThread::shutdown(){
 }
 
-void Processor::notify(EVENT event, ClientSocket* data){
+void WorkThread::notify(EVENT event, ClientSocket* data){
 }
-
-*/
 
 ProtoEngine::ProtoEngine(const std::shared_ptr<Cycle>& cycle){
     this->cycle = cycle;

@@ -25,7 +25,7 @@ class Dispatcher{
         std::queue<std::pair<EVENT, ClientSocket*>> csEvents;
         */
     public:
-        Dispatcher(const std::shared_ptr<Cycle>& cycle);
+        Dispatcher(const std::weak_ptr<Cycle>& cycle);
         ~Dispatcher();
         bool init();
         void serve();

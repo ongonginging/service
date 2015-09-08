@@ -15,28 +15,25 @@
 
 struct Cycle;
 
-/*
-class Processor{
+class WorkThread{
     private:
         std::shared_ptr<ProtoEventHandler> eventHandler;
         std::unordered_map<ClientSocket*, Connection*> conns; // combine connection with socket
         int pipe[2];
     public:
-        Processor(const std::shared_ptr<Cycle>& cycle);
-        ~Processor();
-        void notify(Event event, ClientSocket*); // called by engine
+        WorkThread(const std::shared_ptr<Cycle>& cycle);
+        ~WorkThread();
+        void notify(EVENT event, ClientSocket*); // called by engine
         bool init();
         void serve();
         void shutdown();
 };
-*/
 
 class ProtoEngine{
     private:
         std::string className = "ProtoEngine";
         std::shared_ptr<Cycle> cycle;
-        std::queue<std::pair<EVENT, ClientSocket*>> qEvent;
-        //std::vector<Processor> vecProcessor;
+        std::vector<WorkThread> workers;
     public:
         ProtoEngine(const std::shared_ptr<Cycle>& cycle);
         ~ProtoEngine();

@@ -14,15 +14,15 @@
 
 bool initConfigure(const std::shared_ptr<Cycle>& cycle){
     std::shared_ptr<Configure>& configure = cycle->configure;
-    log("configure.use_count() = ", configure.use_count());
+    log("0000000000 configure.use_count() = ", configure.use_count());
     configure->set("port", "9544");
     configure->set("host", "0.0.0.0");
     configure->set("backlog", "1024");
     return true;
 }
 
-void dispatchRunner(const std::shared_ptr<Cycle>& cycle){
-    log("cycle.use_count:", cycle.use_count());
+void dispatchRunner(const std::weak_ptr<Cycle>& cycle){
+    log("22222222222 cycle.use_count:", cycle.use_count());
     Dispatcher disptacher(cycle);
     if (!disptacher.init()){
         exit(-1);
@@ -30,8 +30,8 @@ void dispatchRunner(const std::shared_ptr<Cycle>& cycle){
     disptacher.serve();
 }
 
-void listenRunner(const std::shared_ptr<Cycle>& cycle){
-    log("cycle.use_count:", cycle.use_count());
+void listenRunner(const std::weak_ptr<Cycle>& cycle){
+    log("22222222222 cycle.use_count:", cycle.use_count());
     Listener listener(cycle);
     if (!listener.init()){
         exit(-1);
@@ -40,7 +40,8 @@ void listenRunner(const std::shared_ptr<Cycle>& cycle){
 }
 
 template<typename Fn>
-void startModule(Fn fn, const std::shared_ptr<Cycle>& cycle){
+void startModule(Fn fn, const std::weak_ptr<Cycle>& cycle){
+    log("11111111111 cycle.use_count:", cycle.use_count());
     try{
         std::thread t(fn, cycle);
         t.detach();
@@ -56,10 +57,7 @@ int main(int argc, char* argv[]){
     initConfigure(cycle);
     startModule(dispatchRunner, cycle);
     startModule(listenRunner, cycle);
-    while(true){
-        log("in loop");
-        sleep(1);
-    }
+    cycle->serve();
     return rv;
 }
 

@@ -22,7 +22,7 @@ class Listener{
         friend ClientSocket* accept(Listener* listener);
     public:
         Listener();
-        Listener(const std::shared_ptr<Cycle>& cycle);
+        Listener(const std::weak_ptr<Cycle>& cycle);
         ~Listener();
         bool init();
         void serve();

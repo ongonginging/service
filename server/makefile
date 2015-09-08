@@ -1,7 +1,7 @@
 
 TARGET=service
 ROOT_DIR=$(shell pwd)
-CPPFLAGS=-std=c++11 -gdwarf-2 -DNO_FCGI_DEFINES -DBOOST_LOG_DYN_LINK -Werror -O0 #-pg
+CPPFLAGS=-std=c++11 -gdwarf-2 -DNO_FCGI_DEFINES -DBOOST_LOG_DYN_LINK  -Werror -O0 -DDEBUG #-pg 
 
 DEP_LIBS=-lpthread\
 	-lhiredis\
@@ -28,6 +28,7 @@ DEP_INCS=-I.\
 DIRS=$(shell find . -maxdepth 3 -type d)
 FILES=$(foreach dir,$(DIRS),$(wildcard $(dir)/*.cpp))
 OBJS=$(patsubst %.cpp,%.o, $(FILES))
+GCHS=$(patsubst %.cpp,%.o.gch, $(FILES))
 HPPS=$(foreach dir,$(DIRS),$(wildcard $(dir)/*.hpp))
 
 VPATH = .
@@ -40,4 +41,4 @@ $(TARGET): $(OBJS)
 	$(CXX)  -o $@ $(OBJS) $(CPPFLAGS) $(DEP_LIBS) $(DEP_INCS)
 
 clean:
-	rm -rf $(TARGET) $(OBJS) nohup.out
+	rm -rf $(TARGET) $(OBJS) $(GCHS) nohup.out

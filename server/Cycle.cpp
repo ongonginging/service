@@ -13,6 +13,10 @@ Cycle::Cycle(){
 Cycle::~Cycle(){
 }
 
+void Cycle::serve(){
+    this->dispatcher->serve();
+}
+
 bool Cycle::getConfig(const std::string& key, std::string& value){
     return this->configure->get(key, value);
 }

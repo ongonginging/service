@@ -14,8 +14,13 @@
 #include "Dispatcher.hpp"
 #include "ClientSocket.hpp"
 
-Dispatcher::Dispatcher(const std::shared_ptr<Cycle>& cycle){
+Dispatcher::Dispatcher(const std::weak_ptr<Cycle>& cycle){
     LOG_ENTER_FUNC("");
+    if(cycle.expired()){
+        exit(1);
+    }
+    this->cycle = cycle.lock();
+    log("cycle.use_count()", this->cycle.use_count());
     LOG_LEAVE_FUNC("");
 }
 
@@ -42,11 +47,17 @@ void Dispatcher::notifyServiceEngine(const EVENT& id, const std::string protocol
 
 bool Dispatcher::init(){
     bool rv = true;
+    LOG_ENTER_FUNC("");
+    LOG_LEAVE_FUNC("");
     return rv;
 }
 
 void Dispatcher::serve(){
-    LOG_ENTER_FUNC("");
+    //LOG_ENTER_FUNC(""); //这里打开会报错, ImportError: No module named 'libstdcxx'''
+    while(true){
+        sleep(1);
+        log("in loop.");
+    }
     /*
     while(true){
         std::unique_lock<std::mutex> lck(this->mtx);
