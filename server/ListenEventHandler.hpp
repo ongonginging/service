@@ -3,11 +3,11 @@
 #define __LISTENEVENTHANDLER_HPP__
 
 #include <event.h>
-#include "IEventHandler.hpp"
 
-class ListenEventHandler: public IEventHandler{
+class ListenEventHandler{
 private:
     std::string className = "ListenEventHandler";
+    struct event_base* base;
     struct event* listenEvent;
 public:
     ListenEventHandler();

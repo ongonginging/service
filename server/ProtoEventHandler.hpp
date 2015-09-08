@@ -3,11 +3,11 @@
 #define __PROTOEVENTHANDLER_HPP__
 
 #include <event.h>
-#include "IEventHandler.hpp"
 
-class ProtoEventHandler: public IEventHandler{
+class ProtoEventHandler{
     private:
         std::string className = "ProtoEventHandler";
+        struct event_base* base;
     public:
         ProtoEventHandler();
         ~ProtoEventHandler();

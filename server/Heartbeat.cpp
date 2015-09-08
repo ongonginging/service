@@ -9,7 +9,7 @@ bool Heartbeat::init(const std::shared_ptr<Cycle>& cycle){
 
 }
 
-void Heartbeat::send(){
+void Heartbeat::serve(){
 
 }
 

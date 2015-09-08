@@ -4,16 +4,17 @@
 
 #include <memory>
 #include "Cycle.hpp"
-#include "IEventHandler.hpp"
 
 struct Cycle;
 
-class Heartbeat:public IEventHandler{
+class Heartbeat{
     private:
+        std::string className = "HeartBeat";
+        struct event_base* base; 
         std::shared_ptr<Cycle> cycle;
     public:
         bool init(const std::shared_ptr<Cycle>& cycle);
-        void send();
+        void serve();
         void shutdown();
 };
 
