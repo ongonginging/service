@@ -114,10 +114,14 @@ bool WorkThread::init(){
 void WorkThread::serve(){
     LOG_ENTER_FUNC("");
     std::function<void(std::shared_ptr<ProtoEventHandler>)> fn = [](std::shared_ptr<ProtoEventHandler> sp){return sp->serve();};
-    this->thread = std::make_shared<std::thread>(fn, this->eventHandler);
-    this->thread->detach();
-    log("start protocol thread:", this->thread->get_id());
-    log("this->thread.use_count() = ", this->thread.use_count());
+    try{
+        this->thread = std::make_shared<std::thread>(fn, this->eventHandler);
+        this->thread->detach();
+        log("start protocol thread:", this->thread->get_id());
+        log("this->thread.use_count() = ", this->thread.use_count());
+    }catch(std::exception& e){
+        log("exception info:", e.what());
+    }
     LOG_LEAVE_FUNC("");
 }
 
