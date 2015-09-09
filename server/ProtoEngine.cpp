@@ -10,6 +10,7 @@
 #include <unordered_map>
 
 #include <event.h>
+#include <boost/lexical_cast.hpp>
 
 #include "Log.hpp"
 #include "Manager.hpp"
@@ -60,14 +61,15 @@ WorkThread::WorkThread(const std::shared_ptr<Manager>& manager){
         log("failed to create connection channel." );
         exit(1);
     }
-    this->eventHandler = std::make_shared<ProtoEventHandler>(
+    this->eventHandler = std::shared_ptr<ProtoEventHandler>(
+            new ProtoEventHandler(
             this->connCtrlChan[1],
             this->threadCtrlChan[1],
             this->getSharedPtr(),
             connReadCb,
             connCtrlCb,
             threadCtrlCb
-            );
+            ));
     LOG_LEAVE_FUNC("");
 }
 
@@ -84,25 +86,29 @@ bool WorkThread::init(){
 
 void WorkThread::serve(){
     LOG_ENTER_FUNC("");
-    this->eventHandler->serve();
+    std::function<void(std::shared_ptr<WorkThread>)> fn = [](std::shared_ptr<WorkThread> sp){return sp->serve();};
+    this->thread = std::make_shared<std::thread>(fn, this->getSharedPtr());
+    this->thread->detach();
+    //this->eventHandler->serve();
     LOG_LEAVE_FUNC("");
 }
 
 void WorkThread::shutdown(){
     LOG_ENTER_FUNC("");
-    uint8_t op = 1;//shutdown eventHandler.
-    if(write(this->threadCtrlChan[0], &op, 1) == -1){
+    close(this->connCtrlChan[0]);//不再接收新任务
+    while(this->hasTask());//等待剩余任务处理完成
+    uint8_t op = 1;
+    if(write(this->threadCtrlChan[0], &op, 1) == -1){//退出线程
         log("failed to write this->threadCtrlChan[0]. errno = ", errno);
     }
-    close(this->threadCtrlChan[0]);
-    close(this->connCtrlChan[0]);
+    close(this->threadCtrlChan[0]);//关闭通道
     LOG_LEAVE_FUNC("");
 }
 
 void WorkThread::notify(std::shared_ptr<ITask>& task){
     LOG_ENTER_FUNC("");
     this->taskQueue.push(task);
-    int8_t op = 1;
+    uint8_t op = 1;
     if(write(this->connCtrlChan[0], &op, 1)){//send signal to eventHandler.
         log("failed to write this->connCtrlChan[0]. errno = ", errno);
     }
@@ -137,6 +143,16 @@ ProtoEngine::ProtoEngine(const std::shared_ptr<Manager>& manager){
     this->manager = manager;
     log("manager.use_count:",manager.use_count());
     log("this->manager.use_count:",this->manager.use_count());
+    int threadNum = 0;
+    std::string threadNumStr;
+    this->manager->getConfig("protoThreadNumber", threadNumStr);
+    if(threadNumStr.size()>0){
+        threadNum = boost::lexical_cast<int>(threadNumStr);
+    }
+    for(int i=0; i<threadNum; i++){
+        this->workers.push_back(std::make_shared<WorkThread>(manager));
+        this->workers.back()->serve();
+    }
     LOG_LEAVE_FUNC("");
 }
 

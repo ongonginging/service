@@ -8,6 +8,7 @@
 #include <thread>
 #include <memory>
 
+#include "Log.hpp"
 #include "ITask.hpp"
 #include "Manager.hpp"
 #include "ClientSocket.hpp"
@@ -65,6 +66,8 @@ class WorkThread:public std::enable_shared_from_this<WorkThread>{
         std::string className = "WorkThread";
         std::shared_ptr<ProtoEventHandler> eventHandler;
         std::queue<std::shared_ptr<ITask>> taskQueue;
+        std::shared_ptr<std::thread> thread;
+        //std::thread* thread;
         int connCtrlChan[2];
         int threadCtrlChan[2];
         friend std::shared_ptr<ProtoEventHandler> getEventHandler(WorkThread* workThread);
