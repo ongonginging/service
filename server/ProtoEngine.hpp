@@ -16,7 +16,9 @@
 
 struct Manager;
 
-class WorkThread{
+class ProtoEventHandler;
+
+class WorkThread:public std::enable_shared_from_this<WorkThread>{
     private:
         std::string className = "WorkThread";
         std::shared_ptr<ProtoEventHandler> eventHandler;
@@ -30,42 +32,42 @@ class WorkThread{
         bool init();
         void serve();
         void shutdown();
-        void notify(EVENT event, ClientSocket*); //called by engine
-
+        void notify(std::shared_ptr<ITask>& task); //called by engine
+        std::shared_ptr<WorkThread> getSharedPtr();
         bool hasTask();
         std::shared_ptr<ITask>& getTask();
 };
 
-class CreateConnectionTask: public ITask {
+class CreateConnTask: public ITask {
     private:
-        ClientSocket* client;
-        WorkThread* workThread;
+        std::shared_ptr<ClientSocket> client;
+        std::shared_ptr<WorkThread> workThread;
     public:
-        CreateConnectionTask(const ClientSocket* client, const WorkThread* workThread){
-            this->client = const_cast<ClientSocket*>(client);
-            this->workThread = const_cast<WorkThread*>(workThread);
+        CreateConnTask(const std::shared_ptr<ClientSocket>& client, const std::shared_ptr<WorkThread>& workThread){
+            this->client = client;
+            this->workThread = workThread;
         }
-        ~CreateConnectionTask(){
+        ~CreateConnTask(){
         }
-        ClientSocket* getClient(){
+        std::shared_ptr<ClientSocket> getClient(){
             return this->client;
         }
         void run(){
         }
 };
 
-class CloseConnectionTask: public ITask {
+class CloseConnTask: public ITask {
     private:
-        ClientSocket* client;
-        WorkThread* workThread;
+        std::shared_ptr<ClientSocket> client;
+        std::shared_ptr<WorkThread> workThread;
     public:
-        CloseConnectionTask(const ClientSocket* client, const WorkThread* workThread){
-            this->client = const_cast<ClientSocket*>(client);
-            this->workThread = const_cast<WorkThread*>(workThread);
+        CloseConnTask(const std::shared_ptr<ClientSocket>& client, const std::shared_ptr<WorkThread>& workThread){
+            this->client = client;
+            this->workThread = workThread;
         }
-        ~CloseConnectionTask(){
+        ~CloseConnTask(){
         }
-        ClientSocket* getClient(){
+        std::shared_ptr<ClientSocket> getClient(){
             return this->client;
         }
         void run(){
