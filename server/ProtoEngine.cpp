@@ -9,9 +9,28 @@
 #include <functional>
 #include <atomic>
 
+#include <event.h>
+
 #include "Log.hpp"
 #include "Manager.hpp"
 #include "ProtoEngine.hpp"
+#include "ProtoEventHandler.hpp"
+
+void threadCtrlCallback(evutil_socket_t fd, short event, void *arg){
+    //todo: figure out event is EV_READ, and no exception thrown.
+    ProtoEventHandler* eventHandler = reinterpret_cast<ProtoEventHandler*>(arg);  
+    eventHandler->shutdown();
+}
+
+void connCtrlCallback(evutil_socket_t fd, short event, void *arg){
+    //todo: figure out event is EV_READ, and no exception thrown.
+    //todo: handler task(create/close connection).
+}
+
+void connReadCallback(evutil_socket_t fd, short event, void *arg){
+    //todo: figure out event is EV_READ, no exception thrown.
+    //todo: 
+}
 
 WorkThread::WorkThread(const std::shared_ptr<Manager>& manager){
     LOG_ENTER_FUNC("");
@@ -28,10 +47,6 @@ WorkThread::WorkThread(const std::shared_ptr<Manager>& manager){
 
 WorkThread::~WorkThread(){
     LOG_ENTER_FUNC("");
-    //close(this->connCtrlChan[0]);
-    //close(this->connCtrlChan[1]);
-    //close(this->threadCtrlChan[0]);
-    //close(this->threadCtrlChan[1]);
     LOG_LEAVE_FUNC("");
 }
 
