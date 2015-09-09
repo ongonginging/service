@@ -24,6 +24,7 @@ class CreateConnTask: public ITask {
         std::string className = "CreateconnTask";
         std::shared_ptr<ClientSocket> client;
         std::shared_ptr<WorkThread> workThread;
+        
     public:
         CreateConnTask(const std::shared_ptr<ClientSocket>& client, const std::shared_ptr<WorkThread>& workThread){
             this->client = client;

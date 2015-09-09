@@ -19,7 +19,7 @@ bool initConfigure(const std::shared_ptr<Manager>& manager){
     configure->set("host", "0.0.0.0");
     configure->set("backlog", "1024");
     configure->set("protoThreadNumber", "10");
-    configure->set("serviceThreadNumber", "10");
+    configure->set("serviceThreadNumber", "1");
     return true;
 }
 
@@ -57,8 +57,10 @@ int main(int argc, char* argv[]){
     std::shared_ptr<Manager> manager = std::make_shared<Manager>();
     manager->configure = std::make_shared<Configure>();
     initConfigure(manager);
-    startModule(dispatchRunner, manager);
-    startModule(listenRunner, manager);
+    //startModule(dispatchRunner, manager);
+    //startModule(listenRunner, manager);
+    manager->protoEngine = std::make_shared<ProtoEngine>(manager);
+    manager->protoEngine->serve();
     manager->serve();
     return rv;
 }

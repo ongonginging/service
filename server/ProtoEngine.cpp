@@ -1,4 +1,6 @@
 
+#include <fcntl.h>
+
 #include <map>
 #include <thread>
 #include <chrono>
@@ -26,6 +28,10 @@ std::shared_ptr<ProtoEventHandler> getEventHandler(WorkThread* workThread){
 void threadCtrlCb(evutil_socket_t fd, short event, void *arg){
     GLOBAL_LOG_ENTER_FUNC("");
     //todo: figure out event is EV_READ, and no exception thrown.
+    uint8_t op;
+    if(-1 == read(fd, (void*)&op, 1)){
+        log("failed to read channel of thread controller. errno = ", errno);
+    }
     WorkThread* workThread = reinterpret_cast<WorkThread*>(arg);
     std::shared_ptr<ProtoEventHandler> eventHandler = getEventHandler(workThread);
     log("eventHandler.use_count() = ", eventHandler.use_count());
@@ -36,6 +42,10 @@ void threadCtrlCb(evutil_socket_t fd, short event, void *arg){
 void connCtrlCb(evutil_socket_t fd, short event, void *arg){
     GLOBAL_LOG_ENTER_FUNC("");
     //todo: figure out event is EV_READ, and no exception thrown.
+    uint8_t op;
+    if(-1 == read(fd, (void*)&op, 1)){
+        log("failed to read channel of thread controller. errno = ", errno);
+    }
     WorkThread* workThread = reinterpret_cast<WorkThread*>(arg);
     if(workThread->hasTask()){
         std::shared_ptr<ITask>& task = workThread->getTask();
@@ -57,19 +67,28 @@ WorkThread::WorkThread(const std::shared_ptr<Manager>& manager){
         log("failed to create control channel." );
         exit(1);
     }
+    log("this->threadCtrlChan[0] = ", this->threadCtrlChan[0], " this->threadCtrlChan[1] = ", this->threadCtrlChan[1]);
+    if(-1 == fcntl(this->threadCtrlChan[0], F_SETFL, O_NONBLOCK|fcntl(this->threadCtrlChan[0], F_GETFL))){
+        log("set nonblocking to this->threadCtrlChan[0]", this->threadCtrlChan[0], "failed. errno =", errno);
+        exit(1);
+    }
+    if(-1 == fcntl(this->threadCtrlChan[1], F_SETFL, O_NONBLOCK|fcntl(this->threadCtrlChan[1], F_GETFL))){
+        log("set nonblocking to this->threadCtrlChan[1]", this->threadCtrlChan[1], "failed. errno =", errno);
+        exit(1);
+    }
     if(-1 == pipe(this->connCtrlChan)){
         log("failed to create connection channel." );
         exit(1);
     }
-    this->eventHandler = std::shared_ptr<ProtoEventHandler>(
-            new ProtoEventHandler(
-            this->connCtrlChan[1],
-            this->threadCtrlChan[1],
-            this->getSharedPtr(),
-            connReadCb,
-            connCtrlCb,
-            threadCtrlCb
-            ));
+    log("this->connCtrlChan[0] = ", this->connCtrlChan[0], " this->connCtrlChan[1] = ", this->connCtrlChan[1]);
+    if(-1 == fcntl(this->connCtrlChan[0], F_SETFL, O_NONBLOCK|fcntl(this->connCtrlChan[0], F_GETFL))){
+        log("set nonblocking to this->connCtrlChan[0]", this->connCtrlChan[0], "failed. errno =", errno);
+        exit(1);
+    }
+    if(-1 == fcntl(this->connCtrlChan[1], F_SETFL, O_NONBLOCK|fcntl(this->connCtrlChan[1], F_GETFL))){
+        log("set nonblocking to this->connCtrlChan[1]", this->connCtrlChan[1], "failed. errno =", errno);
+        exit(1);
+    } 
     LOG_LEAVE_FUNC("");
 }
 
@@ -80,14 +99,22 @@ WorkThread::~WorkThread(){
 
 bool WorkThread::init(){
     LOG_ENTER_FUNC("");
+    this->eventHandler = std::make_shared<ProtoEventHandler>(
+            this->connCtrlChan[0],
+            this->threadCtrlChan[0],
+            this->getSharedPtr(),
+            connReadCb,
+            connCtrlCb,
+            threadCtrlCb
+            );
     this->eventHandler->init();
     LOG_LEAVE_FUNC("");
 }
 
 void WorkThread::serve(){
     LOG_ENTER_FUNC("");
-    std::function<void(std::shared_ptr<WorkThread>)> fn = [](std::shared_ptr<WorkThread> sp){return sp->serve();};
-    this->thread = std::make_shared<std::thread>(fn, this->getSharedPtr());
+    std::function<void(std::shared_ptr<ProtoEventHandler>)> fn = [](std::shared_ptr<ProtoEventHandler> sp){return sp->serve();};
+    this->thread = std::make_shared<std::thread>(fn, this->eventHandler);
     this->thread->detach();
     log("start protocol thread:", this->thread->get_id());
     log("this->thread.use_count() = ", this->thread.use_count());
@@ -99,8 +126,8 @@ void WorkThread::shutdown(){
     close(this->connCtrlChan[0]);//不再接收新任务
     while(this->hasTask());//等待剩余任务处理完成
     uint8_t op = 1;
-    if(write(this->threadCtrlChan[0], &op, 1) == -1){//退出线程
-        log("failed to write this->threadCtrlChan[0]. errno = ", errno);
+    if(write(this->threadCtrlChan[1], &op, 1) == -1){//退出线程
+        log("failed to write this->threadCtrlChan[1]. errno = ", errno);
     }
     close(this->threadCtrlChan[0]);//关闭通道
     LOG_LEAVE_FUNC("");
@@ -110,8 +137,8 @@ void WorkThread::notify(std::shared_ptr<ITask>& task){
     LOG_ENTER_FUNC("");
     this->taskQueue.push(task);
     uint8_t op = 1;
-    if(write(this->connCtrlChan[0], &op, 1)){//send signal to eventHandler.
-        log("failed to write this->connCtrlChan[0]. errno = ", errno);
+    if(write(this->connCtrlChan[1], &op, 1)){//send signal to eventHandler.
+        log("failed to write this->connCtrlChan[1]. errno = ", errno);
     }
     LOG_LEAVE_FUNC("");
 }
@@ -144,17 +171,6 @@ ProtoEngine::ProtoEngine(const std::shared_ptr<Manager>& manager){
     this->manager = manager;
     log("manager.use_count:",manager.use_count());
     log("this->manager.use_count:",this->manager.use_count());
-    int threadNum = 0;
-    std::string threadNumStr;
-    this->manager->getConfig("protoThreadNumber", threadNumStr);
-    if(threadNumStr.size()>0){
-        threadNum = boost::lexical_cast<int>(threadNumStr);
-    }
-    for(int i=0; i<threadNum; i++){
-        this->workers.push_back(std::make_shared<WorkThread>(manager));
-        this->workers.back()->serve();
-        log("start protocol thread: ", this->workers.back());
-    }
     LOG_LEAVE_FUNC("");
 }
 
@@ -170,6 +186,18 @@ bool ProtoEngine::init(){
 
 void ProtoEngine::serve(){
     LOG_ENTER_FUNC("");
+    int threadNum = 0;
+    std::string threadNumStr;
+    this->manager->getConfig("protoThreadNumber", threadNumStr);
+    if(threadNumStr.size()>0){
+        threadNum = boost::lexical_cast<int>(threadNumStr);
+    }
+    log("total number of protocol thread to start: ", threadNum);
+    for(int i=0; i<threadNum; i++){
+        this->workers.push_back(std::make_shared<WorkThread>(this->manager));
+        this->workers.back()->init();
+        this->workers.back()->serve();
+    }
     LOG_LEAVE_FUNC("");
 }
 

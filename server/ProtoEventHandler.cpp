@@ -23,17 +23,20 @@ ProtoEventHandler::ProtoEventHandler(
     LOG_ENTER_FUNC("");
     this->base = event_base_new();
     this->workThread = workThread;
-    log("workThred.use_count() = ", workThread.use_count()); 
-    log("this->workThred.use_count() = ", this->workThread.use_count()); 
-
+    log("workThread.use_count() = ", workThread.use_count()); 
+    log("this->workThread.use_count() = ", this->workThread.use_count()); 
     this->connReadCb = connReadCb;
 
+    this->connCtrlChan = connCtrlChan;
     this->connCtrlCb = connCtrlCb;
+    log("this->connCtrlChan = ", this->connCtrlChan);
     this->connCtrlEvent = event_new(this->base, this->connCtrlChan, EV_READ|EV_PERSIST, this->connCtrlCb, reinterpret_cast<void*>(workThread.get()));
     event_add(this->connCtrlEvent, NULL);//set event timeout.
 
+    this->threadCtrlChan = threadCtrlChan;
     this->threadCtrlCb = threadCtrlCb;
-    this->connCtrlEvent = event_new(this->base, this->threadCtrlChan, EV_READ|EV_PERSIST, this->threadCtrlCb, reinterpret_cast<void*>(workThread.get()));
+    log("this->threadCtrlChan = ", this->threadCtrlChan);
+    this->threadCtrlEvent = event_new(this->base, this->threadCtrlChan, EV_READ|EV_PERSIST, this->threadCtrlCb, reinterpret_cast<void*>(workThread.get()));
     event_add(this->connCtrlEvent, NULL);//set event timeout.
 
     LOG_LEAVE_FUNC("");
