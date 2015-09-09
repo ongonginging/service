@@ -16,36 +16,70 @@
 
 struct Manager;
 
-class CreateConnTask:public ITask{
-    private:
-        EVENT event;
-        ClientSocket* cs;
-    public:
-        void run();
-};
-
-class CloseConnTask:public ITask{
-    private:
-        EVENT event;
-        ClientSocket* cs;
-    public:
-        void run();
-};
-
 class WorkThread{
     private:
         std::string className = "WorkThread";
         std::shared_ptr<ProtoEventHandler> eventHandler;
-        std::queue<std::pair<EVENT, ClientSocket*>> eventQueue;
+        std::queue<std::shared_ptr<ITask>> taskQueue;
         int connCtrlChan[2];
         int threadCtrlChan[2];
+        friend std::shared_ptr<ProtoEventHandler> getEventHandler(WorkThread* workThread);
     public:
         WorkThread(const std::shared_ptr<Manager>& manager);
         ~WorkThread();
-        void notify(EVENT event, ClientSocket*); // called by engine
         bool init();
         void serve();
         void shutdown();
+        void notify(EVENT event, ClientSocket*); //called by engine
+
+        bool hasTask();
+        std::shared_ptr<ITask>& getTask();
+};
+
+class CreateConnectionTask: public ITask {
+    private:
+        EVENT event;
+        ClientSocket* client;
+        WorkThread* workThread;
+    public:
+        CreateConnectionTask(const EVENT event, const ClientSocket* client, const WorkThread* workThread){
+            this->event = event;
+            this->client = const_cast<ClientSocket*>(client);
+            this->workThread = const_cast<WorkThread*>(workThread);
+        }
+        ~CreateConnectionTask(){
+        }
+        EVENT getEvent(){
+            return this->event;
+        }
+        ClientSocket* getClient(){
+            return this->client;
+        }
+        void run(){
+        }
+};
+
+class CloseConnectionTask: public ITask {
+    private:
+        EVENT event;
+        ClientSocket* client;
+        WorkThread* workThread;
+    public:
+        CloseConnectionTask(const EVENT event, const ClientSocket* client, const WorkThread* workThread){
+            this->event = event;
+            this->client = const_cast<ClientSocket*>(client);
+            this->workThread = const_cast<WorkThread*>(workThread);
+        }
+        ~CloseConnectionTask(){
+        }
+        EVENT getEvent(){
+            return this->event;
+        }
+        ClientSocket* getClient(){
+            return this->client;
+        }
+        void run(){
+        }
 };
 
 class ProtoEngine{

@@ -1,13 +1,13 @@
 
-#include <iostream>
 #include <map>
-#include <memory>
-#include <unordered_map>
-#include <utility>
 #include <thread>
 #include <chrono>
-#include <functional>
 #include <atomic>
+#include <memory>
+#include <utility>
+#include <iostream>
+#include <functional>
+#include <unordered_map>
 
 #include <event.h>
 
@@ -16,15 +16,25 @@
 #include "ProtoEngine.hpp"
 #include "ProtoEventHandler.hpp"
 
+std::shared_ptr<ProtoEventHandler> getEventHandler(WorkThread* workThread){
+    return workThread->eventHandler;
+}
+
 void threadCtrlCallback(evutil_socket_t fd, short event, void *arg){
     //todo: figure out event is EV_READ, and no exception thrown.
-    ProtoEventHandler* eventHandler = reinterpret_cast<ProtoEventHandler*>(arg);  
+    WorkThread* workThread = reinterpret_cast<WorkThread*>(arg);  
+    std::shared_ptr<ProtoEventHandler> eventHandler = getEventHandler(workThread);
     eventHandler->shutdown();
 }
 
 void connCtrlCallback(evutil_socket_t fd, short event, void *arg){
     //todo: figure out event is EV_READ, and no exception thrown.
-    //todo: handler task(create/close connection).
+    WorkThread* workThread = reinterpret_cast<WorkThread*>(arg);
+    if(workThread->hasTask()){
+        std::shared_ptr<ITask>& task = workThread->getTask();
+        log("task.use_count() = ", task.use_count());
+        task->run();
+    }
 }
 
 void connReadCallback(evutil_socket_t fd, short event, void *arg){
@@ -48,6 +58,16 @@ WorkThread::WorkThread(const std::shared_ptr<Manager>& manager){
 WorkThread::~WorkThread(){
     LOG_ENTER_FUNC("");
     LOG_LEAVE_FUNC("");
+}
+
+bool WorkThread::hasTask(){
+    return (!this->taskQueue.empty());
+}
+
+std::shared_ptr<ITask>& WorkThread::getTask(){
+    std::shared_ptr<ITask>& task = this->taskQueue.front();
+    this->taskQueue.pop();
+    return task;
 }
 
 bool WorkThread::init(){
@@ -108,4 +128,5 @@ void ProtoEngine::notify(EVENT event, ClientSocket* data){
     LOG_ENTER_FUNC("");
     LOG_LEAVE_FUNC("");
 }
+
 

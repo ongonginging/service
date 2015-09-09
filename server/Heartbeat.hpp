@@ -19,3 +19,4 @@ class Heartbeat{
 };
 
 #endif //__HEARTBEAT_HPP__
+

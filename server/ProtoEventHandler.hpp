@@ -12,6 +12,7 @@ class ProtoEventHandler{
         struct event* connCtrlEvent;
         struct event* threadCtrlEvent;
         std::queue<struct event*> connEvent;
+        void (* readConnCallback)(evutil_socket_t fd, short event, void* arg);
     public:
         ProtoEventHandler();
         ~ProtoEventHandler();
@@ -21,6 +22,8 @@ class ProtoEventHandler{
         void init();
         void serve();
         void shutdown();
+        bool addConn(int fd, void* arg);
+        bool delConn(int fd);
 };
 
 #endif //__PROTOEVENTHANDLER_HPP__

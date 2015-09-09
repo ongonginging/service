@@ -57,3 +57,11 @@ void ProtoEventHandler::shutdown(){
     LOG_LEAVE_FUNC("");
 }
 
+bool addConn(int fd, void* arg){
+    //struct event* ev = event_new(this->base, fd, EV_READ|EV_PERSIST, cb, arg);
+    //event_add(ev, NULL);//set event timeout.
+}
+
+bool delConn(){
+}
+
