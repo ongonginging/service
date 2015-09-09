@@ -29,7 +29,7 @@ class ProtoEventHandler{
         ProtoEventHandler(
                 int connCtrlChan,
                 int threadCtrlChan,
-                std::shared_ptr<WorkThread>& workThread,
+                std::shared_ptr<WorkThread> workThread,
                 void (* connReadCb)(evutil_socket_t fd, short event, void* arg),
                 void (* connCtrlCb)(evutil_socket_t fd, short event, void* arg),
                 void (* threadCtrlCb)(evutil_socket_t fd, short event, void* arg)

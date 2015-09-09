@@ -14,15 +14,17 @@ ProtoEventHandler::ProtoEventHandler(){
 ProtoEventHandler::ProtoEventHandler(
                 int connCtrlChan,
                 int threadCtrlChan,
-                std::shared_ptr<WorkThread>& workThread,
+                std::shared_ptr<WorkThread> workThread,
                 void (* connReadCb)(evutil_socket_t fd, short event, void* arg),
                 void (* connCtrlCb)(evutil_socket_t fd, short event, void* arg),
                 void (* threadCtrlCb)(evutil_socket_t fd, short event, void* arg)
                 )
 {
-    LOG_ENTER_FUNC("default constructor.");
+    LOG_ENTER_FUNC("");
     this->base = event_base_new();
     this->workThread = workThread;
+    log("workThred.use_count() = ", workThread.use_count()); 
+    log("this->workThred.use_count() = ", this->workThread.use_count()); 
 
     this->connReadCb = connReadCb;
 
@@ -34,7 +36,7 @@ ProtoEventHandler::ProtoEventHandler(
     this->connCtrlEvent = event_new(this->base, this->threadCtrlChan, EV_READ|EV_PERSIST, this->threadCtrlCb, reinterpret_cast<void*>(workThread.get()));
     event_add(this->connCtrlEvent, NULL);//set event timeout.
 
-    LOG_LEAVE_FUNC("default constructor.");
+    LOG_LEAVE_FUNC("");
 }
 
 ProtoEventHandler::~ProtoEventHandler(){

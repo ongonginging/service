@@ -17,17 +17,23 @@
 #include "ProtoEventHandler.hpp"
 
 std::shared_ptr<ProtoEventHandler> getEventHandler(WorkThread* workThread){
+    GLOBAL_LOG_ENTER_FUNC("");
+    GLOBAL_LOG_LEAVE_FUNC("");
     return workThread->eventHandler;
 }
 
 void threadCtrlCb(evutil_socket_t fd, short event, void *arg){
+    GLOBAL_LOG_ENTER_FUNC("");
     //todo: figure out event is EV_READ, and no exception thrown.
-    WorkThread* workThread = reinterpret_cast<WorkThread*>(arg);  
+    WorkThread* workThread = reinterpret_cast<WorkThread*>(arg);
     std::shared_ptr<ProtoEventHandler> eventHandler = getEventHandler(workThread);
+    log("eventHandler.use_count() = ", eventHandler.use_count());
     eventHandler->shutdown();
+    GLOBAL_LOG_LEAVE_FUNC("");
 }
 
 void connCtrlCb(evutil_socket_t fd, short event, void *arg){
+    GLOBAL_LOG_ENTER_FUNC("");
     //todo: figure out event is EV_READ, and no exception thrown.
     WorkThread* workThread = reinterpret_cast<WorkThread*>(arg);
     if(workThread->hasTask()){
@@ -35,10 +41,13 @@ void connCtrlCb(evutil_socket_t fd, short event, void *arg){
         log("task.use_count() = ", task.use_count());
         task->run();
     }
+    GLOBAL_LOG_LEAVE_FUNC("");
 }
 
 void connReadCb(evutil_socket_t fd, short event, void *arg){
+    GLOBAL_LOG_ENTER_FUNC("");
     //todo: figure out event is EV_READ, no exception thrown.
+    GLOBAL_LOG_ENTER_FUNC("");
 }
 
 WorkThread::WorkThread(const std::shared_ptr<Manager>& manager){
@@ -51,6 +60,14 @@ WorkThread::WorkThread(const std::shared_ptr<Manager>& manager){
         log("failed to create connection channel." );
         exit(1);
     }
+    this->eventHandler = std::make_shared<ProtoEventHandler>(
+            this->connCtrlChan[1],
+            this->threadCtrlChan[1],
+            this->getSharedPtr(),
+            connReadCb,
+            connCtrlCb,
+            threadCtrlCb
+            );
     LOG_LEAVE_FUNC("");
 }
 
@@ -86,7 +103,9 @@ void WorkThread::notify(std::shared_ptr<ITask>& task){
     LOG_ENTER_FUNC("");
     this->taskQueue.push(task);
     int8_t op = 1;
-    if(write(this->connCtrlChan[0],&op, 1))//send signal to eventHandler.
+    if(write(this->connCtrlChan[0], &op, 1)){//send signal to eventHandler.
+        log("failed to write this->connCtrlChan[0]. errno = ", errno);
+    }
     LOG_LEAVE_FUNC("");
 }
 
@@ -98,14 +117,17 @@ std::shared_ptr<WorkThread> WorkThread::getSharedPtr(){
 
 bool WorkThread::hasTask(){
     LOG_ENTER_FUNC("");
+    bool rv = (!this->taskQueue.empty());
+    log("thread ", std::this_thread::get_id()," has Task:", rv?"true":"false");
     LOG_LEAVE_FUNC("");
-    return (!this->taskQueue.empty());
+    return rv;
 }
 
 std::shared_ptr<ITask>& WorkThread::getTask(){
     LOG_ENTER_FUNC("");
     std::shared_ptr<ITask>& task = this->taskQueue.front();
     this->taskQueue.pop();
+    log("thread ", std::this_thread::get_id()," get task:", task.get());
     LOG_LEAVE_FUNC("");
     return task;
 }
