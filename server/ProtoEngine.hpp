@@ -38,19 +38,14 @@ class WorkThread{
 
 class CreateConnectionTask: public ITask {
     private:
-        EVENT event;
         ClientSocket* client;
         WorkThread* workThread;
     public:
-        CreateConnectionTask(const EVENT event, const ClientSocket* client, const WorkThread* workThread){
-            this->event = event;
+        CreateConnectionTask(const ClientSocket* client, const WorkThread* workThread){
             this->client = const_cast<ClientSocket*>(client);
             this->workThread = const_cast<WorkThread*>(workThread);
         }
         ~CreateConnectionTask(){
-        }
-        EVENT getEvent(){
-            return this->event;
         }
         ClientSocket* getClient(){
             return this->client;
@@ -61,19 +56,14 @@ class CreateConnectionTask: public ITask {
 
 class CloseConnectionTask: public ITask {
     private:
-        EVENT event;
         ClientSocket* client;
         WorkThread* workThread;
     public:
-        CloseConnectionTask(const EVENT event, const ClientSocket* client, const WorkThread* workThread){
-            this->event = event;
+        CloseConnectionTask(const ClientSocket* client, const WorkThread* workThread){
             this->client = const_cast<ClientSocket*>(client);
             this->workThread = const_cast<WorkThread*>(workThread);
         }
         ~CloseConnectionTask(){
-        }
-        EVENT getEvent(){
-            return this->event;
         }
         ClientSocket* getClient(){
             return this->client;
