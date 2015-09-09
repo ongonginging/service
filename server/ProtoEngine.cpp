@@ -89,7 +89,8 @@ void WorkThread::serve(){
     std::function<void(std::shared_ptr<WorkThread>)> fn = [](std::shared_ptr<WorkThread> sp){return sp->serve();};
     this->thread = std::make_shared<std::thread>(fn, this->getSharedPtr());
     this->thread->detach();
-    //this->eventHandler->serve();
+    log("start protocol thread:", this->thread->get_id());
+    log("this->thread.use_count() = ", this->thread.use_count());
     LOG_LEAVE_FUNC("");
 }
 
@@ -152,6 +153,7 @@ ProtoEngine::ProtoEngine(const std::shared_ptr<Manager>& manager){
     for(int i=0; i<threadNum; i++){
         this->workers.push_back(std::make_shared<WorkThread>(manager));
         this->workers.back()->serve();
+        log("start protocol thread: ", this->workers.back());
     }
     LOG_LEAVE_FUNC("");
 }
