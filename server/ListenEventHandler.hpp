@@ -9,6 +9,7 @@ private:
     std::string className = "ListenEventHandler";
     struct event_base* base;
     struct event* listenEvent;
+    void (* listenCallback)(evutil_socket_t fd, short event, void* arg);
 public:
     ListenEventHandler();
     ~ListenEventHandler();
