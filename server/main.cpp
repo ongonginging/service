@@ -18,7 +18,7 @@ bool initConfigure(const std::shared_ptr<Manager>& manager){
     configure->set("port", "9544");
     configure->set("host", "0.0.0.0");
     configure->set("backlog", "1024");
-    configure->set("protoThreadNumber", "10");
+    configure->set("protoThreadNumber", "3");
     configure->set("serviceThreadNumber", "1");
     return true;
 }
