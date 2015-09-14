@@ -4,7 +4,7 @@
 #include <map>
 #include <thread>
 #include <chrono>
-#include <atomic>                                                                                                                                                                            
+#include <atomic>
 #include <memory>
 #include <utility>
 #include <iostream>
