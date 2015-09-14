@@ -176,9 +176,8 @@ ServiceEngine::~ServiceEngine(){
 
 bool ServiceEngine::init(){
     LOG_ENTER_FUNC("");
-    bool rv = true;
     LOG_LEAVE_FUNC("");
-    return rv;
+    return true;
 }
 
 void ServiceEngine::serve(){

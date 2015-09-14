@@ -22,10 +22,13 @@ bool Manager::init(){
     if(!rv)return rv;
     this->listener = std::make_shared<Listener>(this->getSharedPtr());
     this->protoEngine = std::make_shared<ProtoEngine>(this->getSharedPtr());
+    this->serviceEngine = std::make_shared<ServiceEngine>(this->getSharedPtr());
     this->dispatcher = std::make_shared<Dispatcher>(this->getSharedPtr());
     rv = this->listener->init();
     if(!rv)return rv;
     rv = this->protoEngine->init();
+    if(!rv)return rv;
+    rv = this->serviceEngine->init();
     if(!rv)return rv;
     rv = this->dispatcher->init();
     if(!rv)return rv;
@@ -34,6 +37,7 @@ bool Manager::init(){
 
 void Manager::serve(){
     this->protoEngine->serve();
+    this->serviceEngine->serve();
     this->listener->serve();
     this->dispatcher->serve();
 }
