@@ -47,10 +47,10 @@ bool Dispatcher::init(){
 }
 
 void Dispatcher::serve(){
-    //LOG_ENTER_FUNC(""); //这里打开会报错, ImportError: No module named 'libstdcxx'''
+    LOG_ENTER_FUNC(""); //这里打开会报错, ImportError: No module named 'libstdcxx'''
     while(true){
         sleep(1);
-//        log("in loop.");
+        log("in loop.");
     }
     LOG_LEAVE_FUNC("");
 }
