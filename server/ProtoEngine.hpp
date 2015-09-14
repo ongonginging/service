@@ -38,6 +38,7 @@ class ConnCreateTask: public ITask {
         }
         void run(){
             LOG_ENTER_FUNC("");
+            log("do connection creating task.");
             LOG_LEAVE_FUNC("");
         }
 };
@@ -59,6 +60,7 @@ class ConnCloseTask: public ITask {
         }
         void run(){
             LOG_ENTER_FUNC("");
+            log("do connection closing task.");
             LOG_LEAVE_FUNC("");
         }
 };

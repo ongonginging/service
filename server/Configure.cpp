@@ -47,7 +47,7 @@ bool Configure::parseFromConfigFile(){
     this->set("port", "9544");
     this->set("host", "0.0.0.0");
     this->set("backlog", "1024");
-    this->set("protoThreadNumber", "1");
+    this->set("protoThreadNumber", "2");
     this->set("serviceThreadNumber", "1");
     LOG_LEAVE_FUNC("");
     return rv;

@@ -139,8 +139,12 @@ void ProtoWorkThread::notify(std::shared_ptr<ITask>& task){
     LOG_ENTER_FUNC("");
     this->taskQueue.push(task);
     uint8_t op = 1;
-    if(write(this->connCtrlChan[1], &op, 1)){//send signal to eventHandler.
-        log("failed to write this->connCtrlChan[1]. errno = ", errno);
+    int result = write(this->connCtrlChan[1], &op, 1);
+    log("write return value: ", result);
+    if (result<=0){//send signal to eventHandler.
+        log("write this->connCtrlChan[1] failed. errno = ", errno);
+    }else{
+        log("write this->connCtrlChan[1] successful.");
     }
     LOG_LEAVE_FUNC("");
 }
@@ -213,7 +217,21 @@ void ProtoEngine::shutdown(){
 
 void ProtoEngine::notifyThread(const EVENT event, ClientSocket* cs){
     LOG_ENTER_FUNC("");
-
+    int threadIndex = cs->getFd()%this->workers.size();
+    log("send client(socket fd) ", cs->getFd()," to thread(index of workers voector)", threadIndex);
+    std::shared_ptr<ITask> task = NULL;
+    switch(event){
+        case CREATE_CONNECTION:
+            task = std::shared_ptr<ITask>(dynamic_cast<ITask*>(new ConnCreateTask(cs, this->workers[threadIndex])));
+            break;
+        case CLOSE_CONNECTION:
+            task = std::shared_ptr<ITask>(dynamic_cast<ITask*>(new ConnCloseTask(cs, this->workers[threadIndex])));
+            break;
+        default:
+            log("What are you 弄啥嘞!?");
+            break;
+    }
+    this->workers[threadIndex]->notify(task);
     LOG_LEAVE_FUNC("");
 }
 
