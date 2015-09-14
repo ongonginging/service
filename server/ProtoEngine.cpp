@@ -25,7 +25,7 @@ std::shared_ptr<ProtoEventHandler> getEventHandler(ProtoWorkThread* workThread){
     return workThread->eventHandler;
 }
 
-void threadCtrlCb(evutil_socket_t fd, short event, void *arg){
+static void threadCtrlCb(evutil_socket_t fd, short event, void *arg){
     GLOBAL_LOG_ENTER_FUNC("");
     //todo: figure out event is EV_READ, and no exception thrown.
     uint8_t op;
