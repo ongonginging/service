@@ -9,7 +9,7 @@
 
 #include "ProtoEngine.hpp"
 
-class WorkThread;
+class ProtoWorkThread;
 
 class ProtoEventHandler{
     private:
@@ -20,7 +20,7 @@ class ProtoEventHandler{
         struct event* connCtrlEvent;
         struct event* threadCtrlEvent;
         std::queue<struct event*> connEvent;
-        std::weak_ptr<WorkThread> workThread;
+        std::weak_ptr<ProtoWorkThread> workThread;
         void (* connReadCb)(evutil_socket_t fd, short event, void* arg);
         void (* connCtrlCb)(evutil_socket_t fd, short event, void* arg);
         void (* threadCtrlCb)(evutil_socket_t fd, short event, void* arg);
@@ -29,7 +29,7 @@ class ProtoEventHandler{
         ProtoEventHandler(
                 int connCtrlChan,
                 int threadCtrlChan,
-                std::shared_ptr<WorkThread> workThread,
+                std::shared_ptr<ProtoWorkThread> workThread,
                 void (* connReadCb)(evutil_socket_t fd, short event, void* arg),
                 void (* connCtrlCb)(evutil_socket_t fd, short event, void* arg),
                 void (* threadCtrlCb)(evutil_socket_t fd, short event, void* arg)

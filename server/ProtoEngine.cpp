@@ -19,7 +19,7 @@
 #include "ProtoEngine.hpp"
 #include "ProtoEventHandler.hpp"
 
-std::shared_ptr<ProtoEventHandler> getEventHandler(WorkThread* workThread){
+std::shared_ptr<ProtoEventHandler> getEventHandler(ProtoWorkThread* workThread){
     GLOBAL_LOG_ENTER_FUNC("");
     GLOBAL_LOG_LEAVE_FUNC("");
     return workThread->eventHandler;
@@ -32,7 +32,7 @@ void threadCtrlCb(evutil_socket_t fd, short event, void *arg){
     if(-1 == read(fd, (void*)&op, 1)){
         log("failed to read channel of thread controller. errno = ", errno);
     }
-    WorkThread* workThread = reinterpret_cast<WorkThread*>(arg);
+    ProtoWorkThread* workThread = reinterpret_cast<ProtoWorkThread*>(arg);
     std::shared_ptr<ProtoEventHandler> eventHandler = getEventHandler(workThread);
     log("eventHandler.use_count() = ", eventHandler.use_count());
     eventHandler->shutdown();
@@ -46,7 +46,7 @@ void connCtrlCb(evutil_socket_t fd, short event, void *arg){
     if(-1 == read(fd, (void*)&op, 1)){
         log("failed to read channel of thread controller. errno = ", errno);
     }
-    WorkThread* workThread = reinterpret_cast<WorkThread*>(arg);
+    ProtoWorkThread* workThread = reinterpret_cast<ProtoWorkThread*>(arg);
     if(workThread->hasTask()){
         std::shared_ptr<ITask>& task = workThread->getTask();
         log("task.use_count() = ", task.use_count());
@@ -61,7 +61,7 @@ void connReadCb(evutil_socket_t fd, short event, void *arg){
     GLOBAL_LOG_ENTER_FUNC("");
 }
 
-WorkThread::WorkThread(const std::shared_ptr<Manager>& manager){
+ProtoWorkThread::ProtoWorkThread(const std::shared_ptr<Manager>& manager){
     LOG_ENTER_FUNC("");
     if(-1 == pipe(this->threadCtrlChan)){
         log("failed to create control channel." );
@@ -92,12 +92,12 @@ WorkThread::WorkThread(const std::shared_ptr<Manager>& manager){
     LOG_LEAVE_FUNC("");
 }
 
-WorkThread::~WorkThread(){
+ProtoWorkThread::~ProtoWorkThread(){
     LOG_ENTER_FUNC("");
     LOG_LEAVE_FUNC("");
 }
 
-bool WorkThread::init(){
+bool ProtoWorkThread::init(){
     bool rv = true;
     LOG_ENTER_FUNC("");
     this->eventHandler = std::make_shared<ProtoEventHandler>(
@@ -113,7 +113,7 @@ bool WorkThread::init(){
     return rv;
 }
 
-void WorkThread::serve(){
+void ProtoWorkThread::serve(){
     LOG_ENTER_FUNC("");
     std::function<void(std::shared_ptr<ProtoEventHandler>)> fn = [](std::shared_ptr<ProtoEventHandler> sp){return sp->serve();};
     try{
@@ -127,7 +127,7 @@ void WorkThread::serve(){
     LOG_LEAVE_FUNC("");
 }
 
-void WorkThread::shutdown(){
+void ProtoWorkThread::shutdown(){
     LOG_ENTER_FUNC("");
     close(this->connCtrlChan[0]);//不再接收新任务
     while(this->hasTask());//等待剩余任务处理完成
@@ -139,7 +139,7 @@ void WorkThread::shutdown(){
     LOG_LEAVE_FUNC("");
 }
 
-void WorkThread::notify(std::shared_ptr<ITask>& task){
+void ProtoWorkThread::notify(std::shared_ptr<ITask>& task){
     LOG_ENTER_FUNC("");
     this->taskQueue.push(task);
     uint8_t op = 1;
@@ -149,13 +149,13 @@ void WorkThread::notify(std::shared_ptr<ITask>& task){
     LOG_LEAVE_FUNC("");
 }
 
-std::shared_ptr<WorkThread> WorkThread::getSharedPtr(){
+std::shared_ptr<ProtoWorkThread> ProtoWorkThread::getSharedPtr(){
     LOG_ENTER_FUNC("");
     LOG_LEAVE_FUNC("");
     return shared_from_this();
 }
 
-bool WorkThread::hasTask(){
+bool ProtoWorkThread::hasTask(){
     LOG_ENTER_FUNC("");
     bool rv = (!this->taskQueue.empty());
     log("thread ", std::this_thread::get_id()," has Task:", rv?"true":"false");
@@ -163,7 +163,7 @@ bool WorkThread::hasTask(){
     return rv;
 }
 
-std::shared_ptr<ITask>& WorkThread::getTask(){
+std::shared_ptr<ITask>& ProtoWorkThread::getTask(){
     LOG_ENTER_FUNC("");
     std::shared_ptr<ITask>& task = this->taskQueue.front();
     this->taskQueue.pop();
@@ -202,7 +202,7 @@ void ProtoEngine::serve(){
     }
     log("total number of protocol thread to start: ", threadNum);
     for(int i=0; i<threadNum; i++){
-        this->workers.push_back(std::make_shared<WorkThread>(this->manager));
+        this->workers.push_back(std::make_shared<ProtoWorkThread>(this->manager));
         bool result = this->workers.back()->init();
         if(!result){log("initialized protocol thread ", i,"failed.");};
         this->workers.back()->serve();

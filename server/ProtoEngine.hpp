@@ -6,6 +6,7 @@
 #include <unordered_map>
 #include <queue>
 #include <thread>
+#include <vector>
 #include <memory>
 
 #include "Log.hpp"
@@ -16,17 +17,17 @@
 #include "ProtoEventHandler.hpp"
 
 struct Manager;
-class WorkThread;
+class ProtoWorkThread;
 class ProtoEventHandler;
 
 class CreateConnTask: public ITask {
     private:
         std::string className = "CreateconnTask";
         std::shared_ptr<ClientSocket> client;
-        std::shared_ptr<WorkThread> workThread;
+        std::shared_ptr<ProtoWorkThread> workThread;
         
     public:
-        CreateConnTask(const std::shared_ptr<ClientSocket>& client, const std::shared_ptr<WorkThread>& workThread){
+        CreateConnTask(const std::shared_ptr<ClientSocket>& client, const std::shared_ptr<ProtoWorkThread>& workThread){
             this->client = client;
             this->workThread = workThread;
         }
@@ -45,9 +46,9 @@ class CloseConnTask: public ITask {
     private:
         std::string className = "CloseConnTask";
         std::shared_ptr<ClientSocket> client;
-        std::shared_ptr<WorkThread> workThread;
+        std::shared_ptr<ProtoWorkThread> workThread;
     public:
-        CloseConnTask(const std::shared_ptr<ClientSocket>& client, const std::shared_ptr<WorkThread>& workThread){
+        CloseConnTask(const std::shared_ptr<ClientSocket>& client, const std::shared_ptr<ProtoWorkThread>& workThread){
             this->client = client;
             this->workThread = workThread;
         }
@@ -62,23 +63,23 @@ class CloseConnTask: public ITask {
         }
 };
 
-class WorkThread:public std::enable_shared_from_this<WorkThread>{
+class ProtoWorkThread:public std::enable_shared_from_this<ProtoWorkThread>{
     private:
-        std::string className = "WorkThread";
+        std::string className = "ProtoWorkThread";
         std::shared_ptr<ProtoEventHandler> eventHandler;
         std::queue<std::shared_ptr<ITask>> taskQueue;
         std::shared_ptr<std::thread> thread;
         int connCtrlChan[2];
         int threadCtrlChan[2];
-        friend std::shared_ptr<ProtoEventHandler> getEventHandler(WorkThread* workThread);
+        friend std::shared_ptr<ProtoEventHandler> getEventHandler(ProtoWorkThread* workThread);
     public:
-        WorkThread(const std::shared_ptr<Manager>& manager);
-        ~WorkThread();
+        ProtoWorkThread(const std::shared_ptr<Manager>& manager);
+        ~ProtoWorkThread();
         bool init();
         void serve();
         void shutdown();
         void notify(std::shared_ptr<ITask>& task); //called by engine
-        std::shared_ptr<WorkThread> getSharedPtr();
+        std::shared_ptr<ProtoWorkThread> getSharedPtr();
         bool hasTask();
         std::shared_ptr<ITask>& getTask();
 };
@@ -87,7 +88,7 @@ class ProtoEngine{
     private:
         std::string className = "ProtoEngine";
         std::shared_ptr<Manager> manager;
-        std::vector<std::shared_ptr<WorkThread>> workers;
+        std::vector<std::shared_ptr<ProtoWorkThread>> workers;
     public:
         ProtoEngine(const std::shared_ptr<Manager>& manager);
         ~ProtoEngine();
