@@ -29,8 +29,8 @@ void listenCallback(evutil_socket_t fd, short event, void *arg){
     GLOBAL_LOG_ENTER_FUNC("");
     Listener* listener = reinterpret_cast<Listener*>(arg);
     while(auto cs = accept(listener)){
-        listener->notifyManager(CREATE_CONNECTION, cs);
         log("accept new client: ", "fd(", cs->getFd(), ")", cs->getHost(),":", cs->getPort());
+        listener->notifyManager(CREATE_CONNECTION, cs);
     }
     GLOBAL_LOG_LEAVE_FUNC("");
 }
@@ -106,7 +106,7 @@ void Listener::shutdown(){
     LOG_LEAVE_FUNC("");
 }
 
-void Listener::notifyManager(const EVENT event, const ClientSocket* cs){
+void Listener::notifyManager(const EVENT event, ClientSocket* cs){
     this->manager->dispatcher->notifyProtoEngine(event, cs);
 }
 

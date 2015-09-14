@@ -20,18 +20,18 @@ struct Manager;
 class ProtoWorkThread;
 class ProtoEventHandler;
 
-class CreateConnTask: public ITask {
+class ConnCreateTask: public ITask {
     private:
-        std::string className = "CreateconnTask";
+        std::string className = "ConnCreateTask";
         std::shared_ptr<ClientSocket> client;
         std::shared_ptr<ProtoWorkThread> workThread;
         
     public:
-        CreateConnTask(const std::shared_ptr<ClientSocket>& client, const std::shared_ptr<ProtoWorkThread>& workThread){
-            this->client = client;
+        ConnCreateTask(ClientSocket* client, const std::shared_ptr<ProtoWorkThread>& workThread){
+            this->client = std::shared_ptr<ClientSocket>(client);
             this->workThread = workThread;
         }
-        ~CreateConnTask(){
+        ~ConnCreateTask(){
         }
         std::shared_ptr<ClientSocket> getClient(){
             return this->client;
@@ -42,17 +42,17 @@ class CreateConnTask: public ITask {
         }
 };
 
-class CloseConnTask: public ITask {
+class ConnCloseTask: public ITask {
     private:
-        std::string className = "CloseConnTask";
+        std::string className = "ConnCloseTask";
         std::shared_ptr<ClientSocket> client;
         std::shared_ptr<ProtoWorkThread> workThread;
     public:
-        CloseConnTask(const std::shared_ptr<ClientSocket>& client, const std::shared_ptr<ProtoWorkThread>& workThread){
-            this->client = client;
+        ConnCloseTask(ClientSocket* client, const std::shared_ptr<ProtoWorkThread>& workThread){
+            this->client = std::shared_ptr<ClientSocket>(client);
             this->workThread = workThread;
         }
-        ~CloseConnTask(){
+        ~ConnCloseTask(){
         }
         std::shared_ptr<ClientSocket> getClient(){
             return this->client;
@@ -95,7 +95,7 @@ class ProtoEngine{
         bool init();
         void serve();
         void shutdown();
-        void notify(EVENT event, ClientSocket*); //call by dispatch module
+        void notifyThread(const EVENT event, ClientSocket*); //call by dispatch module
 };
 
 #endif //__PROTOENGINE_HPP__

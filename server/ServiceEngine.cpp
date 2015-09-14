@@ -203,7 +203,7 @@ void ServiceEngine::shutdown(){
     LOG_LEAVE_FUNC("");
 }
 
-void ServiceEngine::notify(EVENT event, ClientSocket* data){
+void ServiceEngine::notifyThread(const EVENT event, const std::string proto){
     LOG_ENTER_FUNC("");
     LOG_LEAVE_FUNC("");
 }

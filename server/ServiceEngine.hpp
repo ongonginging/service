@@ -52,7 +52,7 @@ class ServiceEngine{
         bool init();
         void serve();
         void shutdown();
-        void notify(EVENT event, ClientSocket*); //call by dispatch module
+        void notifyThread(const EVENT event, const std::string proto); //call by dispatch module
 };
 
 #endif //__SERVICEENGINE_HPP__

@@ -211,8 +211,9 @@ void ProtoEngine::shutdown(){
     LOG_LEAVE_FUNC("");
 }
 
-void ProtoEngine::notify(EVENT event, ClientSocket* data){
+void ProtoEngine::notifyThread(const EVENT event, ClientSocket* cs){
     LOG_ENTER_FUNC("");
+
     LOG_LEAVE_FUNC("");
 }
 

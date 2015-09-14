@@ -13,6 +13,7 @@
 #include "Event.hpp"
 #include "Dispatcher.hpp"
 #include "ClientSocket.hpp"
+#include "ProtoEngine.hpp"
 
 Dispatcher::Dispatcher(const std::weak_ptr<Manager>& manager){
     LOG_ENTER_FUNC("constructor");
@@ -29,13 +30,15 @@ Dispatcher::~Dispatcher(){
     LOG_LEAVE_FUNC("destructor");
 }
 
-void Dispatcher::notifyProtoEngine(const EVENT id, const ClientSocket* cs){
+void Dispatcher::notifyProtoEngine(const EVENT event, ClientSocket* cs){
     LOG_ENTER_FUNC("");
+    this->manager->protoEngine->notifyThread(event, cs);
     LOG_LEAVE_FUNC("");
 }
 
-void Dispatcher::notifyServiceEngine(const EVENT id, const std::string protocol){
+void Dispatcher::notifyServiceEngine(const EVENT event, const std::string proto){
     LOG_ENTER_FUNC("");
+    this->manager->serviceEngine->notifyThread(event, proto);
     LOG_LEAVE_FUNC("");
 }
 

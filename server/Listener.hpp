@@ -31,7 +31,7 @@ class Listener: public std::enable_shared_from_this<Listener>{
         bool init();
         void serve();
         void shutdown();
-        void notifyManager(const EVENT event, const ClientSocket* cs);
+        void notifyManager(const EVENT event, ClientSocket* cs);
         std::shared_ptr<Listener> getSharedPtr();
 };
 

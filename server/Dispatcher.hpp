@@ -25,7 +25,7 @@ class Dispatcher{
         bool init();
         void serve();
         void shutdown();
-        void notifyProtoEngine(const EVENT event, const ClientSocket*);
+        void notifyProtoEngine(const EVENT event, ClientSocket*);
         void notifyServiceEngine(const EVENT event, const std::string proto);
 };
 
