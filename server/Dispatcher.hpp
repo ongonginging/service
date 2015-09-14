@@ -19,11 +19,6 @@ class Dispatcher{
     private:
         std::string className = "Dispatcher";
         std::shared_ptr<Manager> manager;
-        /*
-        std::mutex mtx;
-        std::condition_variable cv;
-        std::queue<std::pair<EVENT, ClientSocket*>> csEvents;
-        */
     public:
         Dispatcher(const std::weak_ptr<Manager>& manager);
         ~Dispatcher();
