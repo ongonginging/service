@@ -29,12 +29,12 @@ Dispatcher::~Dispatcher(){
     LOG_LEAVE_FUNC("destructor");
 }
 
-void Dispatcher::notifyProtoEngine(const EVENT& id, const ClientSocket*& cs){
+void Dispatcher::notifyProtoEngine(const EVENT id, const ClientSocket* cs){
     LOG_ENTER_FUNC("");
     LOG_LEAVE_FUNC("");
 }
 
-void Dispatcher::notifyServiceEngine(const EVENT& id, const std::string protocol){
+void Dispatcher::notifyServiceEngine(const EVENT id, const std::string protocol){
     LOG_ENTER_FUNC("");
     LOG_LEAVE_FUNC("");
 }

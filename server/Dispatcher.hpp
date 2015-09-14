@@ -30,8 +30,8 @@ class Dispatcher{
         bool init();
         void serve();
         void shutdown();
-        void notifyProtoEngine(const EVENT& event, const ClientSocket*&);
-        void notifyServiceEngine(const EVENT& event, const std::string proto);
+        void notifyProtoEngine(const EVENT event, const ClientSocket*);
+        void notifyServiceEngine(const EVENT event, const std::string proto);
 };
 
 #endif //__DISPATCHER_HPP__

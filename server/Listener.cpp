@@ -29,6 +29,7 @@ void listenCallback(evutil_socket_t fd, short event, void *arg){
     GLOBAL_LOG_ENTER_FUNC("");
     Listener* listener = reinterpret_cast<Listener*>(arg);
     while(auto cs = accept(listener)){
+        listener->notifyManager(CREATE_CONNECTION, cs);
         log("accept new client: ", "fd(", cs->getFd(), ")", cs->getHost(),":", cs->getPort());
     }
     GLOBAL_LOG_LEAVE_FUNC("");
@@ -54,7 +55,7 @@ Listener::Listener(const std::weak_ptr<Manager>& manager){
     if(this->manager->getConfig("port", tmp)){
         port = boost::lexical_cast<int>(tmp);
     }
-   int backlog;
+    int backlog;
     if(this->manager->getConfig("backlog", tmp)){
         backlog = boost::lexical_cast<int>(tmp);
     }
@@ -103,6 +104,10 @@ void Listener::shutdown(){
     int rv = this->serverSocket->close();
     this->eventHandler->shutdown();
     LOG_LEAVE_FUNC("");
+}
+
+void Listener::notifyManager(const EVENT event, const ClientSocket* cs){
+    this->manager->dispatcher->notifyProtoEngine(event, cs);
 }
 
 std::shared_ptr<Listener> Listener::getSharedPtr(){

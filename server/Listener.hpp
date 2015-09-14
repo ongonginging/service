@@ -8,6 +8,7 @@
 
 #include <event.h>
 
+#include "Event.hpp"
 #include "Manager.hpp"
 #include "ServerSocket.hpp"
 #include "ListenEventHandler.hpp"
@@ -30,6 +31,7 @@ class Listener: public std::enable_shared_from_this<Listener>{
         bool init();
         void serve();
         void shutdown();
+        void notifyManager(const EVENT event, const ClientSocket* cs);
         std::shared_ptr<Listener> getSharedPtr();
 };
 
