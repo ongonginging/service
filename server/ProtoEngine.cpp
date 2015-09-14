@@ -98,6 +98,7 @@ WorkThread::~WorkThread(){
 }
 
 bool WorkThread::init(){
+    bool rv = true;
     LOG_ENTER_FUNC("");
     this->eventHandler = std::make_shared<ProtoEventHandler>(
             this->connCtrlChan[0],
@@ -107,8 +108,9 @@ bool WorkThread::init(){
             connCtrlCb,
             threadCtrlCb
             );
-    this->eventHandler->init();
+    rv = this->eventHandler->init();
     LOG_LEAVE_FUNC("");
+    return rv;
 }
 
 void WorkThread::serve(){
@@ -184,8 +186,10 @@ ProtoEngine::~ProtoEngine(){
 }
 
 bool ProtoEngine::init(){
+    bool rv = true;
     LOG_ENTER_FUNC("");
     LOG_LEAVE_FUNC("");
+    return rv;
 }
 
 void ProtoEngine::serve(){
@@ -199,7 +203,8 @@ void ProtoEngine::serve(){
     log("total number of protocol thread to start: ", threadNum);
     for(int i=0; i<threadNum; i++){
         this->workers.push_back(std::make_shared<WorkThread>(this->manager));
-        this->workers.back()->init();
+        bool result = this->workers.back()->init();
+        if(!result){log("initialized protocol thread ", i,"failed.");};
         this->workers.back()->serve();
     }
     LOG_LEAVE_FUNC("");

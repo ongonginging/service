@@ -1,9 +1,10 @@
 
-#ifndef __CONFIG_HPP__
-#define __CONFIG_HPP__
+#ifndef __CONFIGURE_HPP__
+#define __CONFIGURE_HPP__
 
-#include<map>
-#include<iostream>
+#include <map>
+#include <memory>
+#include <iostream>
 
 class Configure{
     private:
@@ -32,5 +33,5 @@ class Test:public Configure{
         ~Test();
 };
 
-#endif //__CONFIG_HPP__
+#endif //__CONFIGURE_HPP__
 

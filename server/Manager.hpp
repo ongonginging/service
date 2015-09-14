@@ -16,7 +16,7 @@ class Dispatcher;
 class ProtoEngine;
 class ServiceEngine;
 
-struct Manager{
+struct Manager:public std::enable_shared_from_this<Manager>{
     public:
         std::shared_ptr<Configure> configure;
         std::shared_ptr<Dispatcher> dispatcher;
@@ -26,7 +26,9 @@ struct Manager{
 
         Manager();
         ~Manager();
+        bool init();
         void serve();
+        std::shared_ptr<Manager> getSharedPtr();
         bool getConfig(const std::string& key, std::string& value);
 };
 

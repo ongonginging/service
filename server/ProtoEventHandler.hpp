@@ -35,7 +35,7 @@ class ProtoEventHandler{
                 void (* threadCtrlCb)(evutil_socket_t fd, short event, void* arg)
                 );
         ~ProtoEventHandler();
-        void init();
+        bool init();
         void serve();
         void shutdown();
         bool addConn(int fd, void* arg);

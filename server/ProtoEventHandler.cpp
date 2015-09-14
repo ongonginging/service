@@ -47,9 +47,11 @@ ProtoEventHandler::~ProtoEventHandler(){
     LOG_LEAVE_FUNC("default destructor.");
 }
 
-void ProtoEventHandler::init(){
+bool ProtoEventHandler::init(){
+    bool rv = true;
     LOG_ENTER_FUNC("");
     LOG_LEAVE_FUNC("");
+    return rv;
 }
 
 void ProtoEventHandler::serve(){

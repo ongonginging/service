@@ -1,22 +1,22 @@
 
-#include<iostream>
+#include <iostream>
 
-#include"Configure.hpp"
-#include"Log.hpp"
+#include "Configure.hpp"
+#include "Log.hpp"
 
-Configure::Configure(void){
+Configure::Configure(){
     LOG_ENTER_FUNC("default constructor");
     LOG_LEAVE_FUNC("default constructor");
+}
+
+Configure::~Configure(){
+    LOG_ENTER_FUNC("default destructor");
+    LOG_LEAVE_FUNC("default destructor");
 }
 
 Configure::Configure(bool flags){
     LOG_ENTER_FUNC("bool flags");
     LOG_LEAVE_FUNC("bool flags");
-}
-
-Configure::~Configure(void){
-    LOG_ENTER_FUNC("default destructor");
-    LOG_LEAVE_FUNC("default destructor");
 }
 
 void Configure::set(const std::string& key, const std::string& value){
@@ -42,7 +42,15 @@ bool Configure::get(const std::string& key, std::string& value){
 }
 
 bool Configure::parseFromConfigFile(){
-
+    bool rv = true;
+    LOG_ENTER_FUNC("");
+    this->set("port", "9544");
+    this->set("host", "0.0.0.0");
+    this->set("backlog", "1024");
+    this->set("protoThreadNumber", "1");
+    this->set("serviceThreadNumber", "1");
+    LOG_LEAVE_FUNC("");
+    return rv;
 }
 
 #if 1
