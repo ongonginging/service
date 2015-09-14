@@ -29,8 +29,8 @@ void threadCtrlCb(evutil_socket_t fd, short event, void *arg){
     GLOBAL_LOG_ENTER_FUNC("");
     //todo: figure out event is EV_READ, and no exception thrown.
     uint8_t op;
-    if(-1 == read(fd, (void*)&op, 1)){
-        log("failed to read channel of thread controller. errno = ", errno);
+    while(-1 != read(fd, (void*)&op, 1)){
+        //log("failed to read channel of thread controller. errno = ", errno);
     }
     ProtoWorkThread* workThread = reinterpret_cast<ProtoWorkThread*>(arg);
     std::shared_ptr<ProtoEventHandler> eventHandler = getEventHandler(workThread);
@@ -43,8 +43,8 @@ void connCtrlCb(evutil_socket_t fd, short event, void *arg){
     GLOBAL_LOG_ENTER_FUNC("");
     //todo: figure out event is EV_READ, and no exception thrown.
     uint8_t op;
-    if(-1 == read(fd, (void*)&op, 1)){
-        log("failed to read channel of thread controller. errno = ", errno);
+    while(-1 != read(fd, (void*)&op, 1)){
+        //log("failed to read channel of thread controller. errno = ", errno);
     }
     ProtoWorkThread* workThread = reinterpret_cast<ProtoWorkThread*>(arg);
     if(workThread->hasTask()){
