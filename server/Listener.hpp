@@ -3,6 +3,7 @@
 #define __LISTENER_HPP__
 
 #include <iostream>
+#include <thread>
 #include <memory>
 
 #include <event.h>
@@ -18,7 +19,8 @@ class Listener{
         std::string className = "Listener";
         std::shared_ptr<Manager> manager;
         std::shared_ptr<ServerSocket> serverSocket;
-        ListenEventHandler eventHandler;
+        std::shared_ptr<std::thread> thread;
+        std::shared_ptr<ListenEventHandler> eventHandler;
         friend ClientSocket* accept(Listener* listener);
     public:
         Listener();

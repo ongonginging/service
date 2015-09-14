@@ -1,13 +1,23 @@
 
-#include<unistd.h>
+#include <unistd.h>
 
-#include<memory>
-#include<boost/lexical_cast.hpp>
+#include <map>
+#include <thread>
+#include <chrono>
+#include <atomic>                                                                                                                                                                            
+#include <memory>
+#include <utility>
+#include <iostream>
+#include <functional>
+#include <unordered_map>
 
-#include"Log.hpp"
-#include"Listener.hpp"
-#include"ServerSocket.hpp"
-#include"ClientSocket.hpp"
+#include <boost/lexical_cast.hpp>
+
+#include "Log.hpp"
+#include "Listener.hpp"
+#include "ListenEventHandler.hpp"
+#include "ServerSocket.hpp"
+#include "ClientSocket.hpp"
 
 ClientSocket* accept(Listener* listener){
     GLOBAL_LOG_ENTER_FUNC("");
@@ -51,6 +61,7 @@ Listener::Listener(const std::weak_ptr<Manager>& manager){
         host = tmp;
     }
     this->serverSocket = std::make_shared<ServerSocket>(port, host, backlog);
+    this->eventHandler = std::make_shared<ListenEventHandler>();
     LOG_LEAVE_FUNC("");
 }
 
@@ -68,22 +79,30 @@ bool Listener::init(){
         rv = false;
         return rv;
     }
-    this->eventHandler.init();
-    this->eventHandler.setListenCallback(listenCallback, this->serverSocket->getFd(), reinterpret_cast<void*>(this));
-    LOG_LEAVE_FUNC("")
-        return rv;
+    this->eventHandler->init();
+    this->eventHandler->setListenCallback(listenCallback, this->serverSocket->getFd(), reinterpret_cast<void*>(this));
+    LOG_LEAVE_FUNC("");
+    return rv;
 }
 
 void Listener::serve(){
     LOG_ENTER_FUNC("");
-    this->eventHandler.serve();
-    LOG_LEAVE_FUNC("")
+    std::function<void(std::shared_ptr<ListenEventHandler>)> fn = [](std::shared_ptr<ListenEventHandler> sp){return sp->serve();};
+    try{
+        this->thread = std::make_shared<std::thread>(fn, this->eventHandler);
+        this->thread->detach();
+        log("start listen thread:", this->thread->get_id());
+        log("this->thread.use_count() = ", this->thread.use_count());
+    }catch(std::exception& e){
+        log("exception info:", e.what());
+    }
+    LOG_LEAVE_FUNC("");
 }
 
 void Listener::shutdown(){
     LOG_ENTER_FUNC("");
     int rv = this->serverSocket->close();
-    this->eventHandler.shutdown();
-    LOG_LEAVE_FUNC("")
+    this->eventHandler->shutdown();
+    LOG_LEAVE_FUNC("");
 }
 

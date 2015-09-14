@@ -23,44 +23,18 @@ bool initConfigure(const std::shared_ptr<Manager>& manager){
     return true;
 }
 
-void dispatchRunner(const std::weak_ptr<Manager>& manager){
-    log("22222222222 manager.use_count:", manager.use_count());
-    Dispatcher disptacher(manager);
-    if (!disptacher.init()){
-        exit(-1);
-    }
-    disptacher.serve();
-}
-
-void listenRunner(const std::weak_ptr<Manager>& manager){
-    log("22222222222 manager.use_count:", manager.use_count());
-    Listener listener(manager);
-    if (!listener.init()){
-        exit(-1);
-    }
-    listener.serve();
-}
-
-template<typename Fn>
-void startModule(Fn fn, const std::weak_ptr<Manager>& manager){
-    log("11111111111 manager.use_count:", manager.use_count());
-    try{
-        std::thread t(fn, manager);
-        t.detach();
-    }catch(const std::exception& e){
-        log("exception.what():", e.what());
-    }
-}
-
 int main(int argc, char* argv[]){
     int rv = 0;
     std::shared_ptr<Manager> manager = std::make_shared<Manager>();
     manager->configure = std::make_shared<Configure>();
     initConfigure(manager);
-    //startModule(dispatchRunner, manager);
-    //startModule(listenRunner, manager);
+    manager->listener = std::make_shared<Listener>(manager);
+    manager->listener->init();
+    manager->listener->serve();
     manager->protoEngine = std::make_shared<ProtoEngine>(manager);
+    manager->protoEngine->init();
     manager->protoEngine->serve();
+    manager->dispatcher = std::make_shared<Dispatcher>(manager);
     manager->serve();
     return rv;
 }
