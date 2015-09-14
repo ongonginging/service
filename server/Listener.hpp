@@ -2,9 +2,9 @@
 #ifndef __LISTENER_HPP__
 #define __LISTENER_HPP__
 
-#include <iostream>
 #include <thread>
 #include <memory>
+#include <iostream>
 
 #include <event.h>
 
@@ -13,8 +13,9 @@
 #include "ListenEventHandler.hpp"
 
 struct Manager;
+class ListenEventHandler;
 
-class Listener{
+class Listener: public std::enable_shared_from_this<Listener>{
     private:
         std::string className = "Listener";
         std::shared_ptr<Manager> manager;
@@ -29,6 +30,7 @@ class Listener{
         bool init();
         void serve();
         void shutdown();
+        std::shared_ptr<Listener> getSharedPtr();
 };
 
 #endif //__LISTENER_HPP__

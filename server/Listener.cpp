@@ -41,8 +41,7 @@ Listener::Listener(){
 
 Listener::Listener(const std::weak_ptr<Manager>& manager){
     LOG_ENTER_FUNC("");
-    int backlog;
-    int port;
+
     std::string host;
     if(manager.expired()){
         //todo: notify main thread to eventHandler error.
@@ -51,17 +50,18 @@ Listener::Listener(const std::weak_ptr<Manager>& manager){
     this->manager = manager.lock();
     log("3333333333333 this->manager.use_count:",this->manager.use_count());
     std::string tmp;
-    if(this->manager->getConfig("backlog", tmp)){
-        backlog = boost::lexical_cast<int>(tmp);
-    }
+    int port;
     if(this->manager->getConfig("port", tmp)){
         port = boost::lexical_cast<int>(tmp);
+    }
+   int backlog;
+    if(this->manager->getConfig("backlog", tmp)){
+        backlog = boost::lexical_cast<int>(tmp);
     }
     if(this->manager->getConfig("host", tmp)){
         host = tmp;
     }
     this->serverSocket = std::make_shared<ServerSocket>(port, host, backlog);
-    this->eventHandler = std::make_shared<ListenEventHandler>();
     LOG_LEAVE_FUNC("");
 }
 
@@ -74,13 +74,12 @@ bool Listener::init(){
     LOG_ENTER_FUNC("");
     bool rv = true;
     int result = this->serverSocket->open();
-    log("result =", result);
     if (result<0){
-        rv = false;
-        return rv;
+        log("openned server socket failed. errno", errno);
+        return false;
     }
+    this->eventHandler = std::make_shared<ListenEventHandler>(this->serverSocket->getFd(), this->getSharedPtr(), listenCallback);
     this->eventHandler->init();
-    this->eventHandler->setListenCallback(listenCallback, this->serverSocket->getFd(), reinterpret_cast<void*>(this));
     LOG_LEAVE_FUNC("");
     return rv;
 }
@@ -104,5 +103,9 @@ void Listener::shutdown(){
     int rv = this->serverSocket->close();
     this->eventHandler->shutdown();
     LOG_LEAVE_FUNC("");
+}
+
+std::shared_ptr<Listener> Listener::getSharedPtr(){
+    return shared_from_this();
 }
 

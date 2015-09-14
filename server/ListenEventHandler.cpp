@@ -9,6 +9,19 @@ ListenEventHandler::ListenEventHandler(){
     LOG_LEAVE_FUNC("default constructor.");
 }
 
+ListenEventHandler::ListenEventHandler(
+    const int& listenFd,
+    std::shared_ptr<Listener> listener,
+    void (* listenCallback)(evutil_socket_t fd, short event, void* arg)
+){
+    this->base = event_base_new();
+    this->listenFd = listenFd;
+    this->listener = listener;
+    this->listenCallback = listenCallback;
+    this->listenEvent = event_new(this->base, this->listenFd, EV_READ|EV_PERSIST, this->listenCallback,  reinterpret_cast<void*>(listener.get()));
+    event_add(this->listenEvent, NULL);//set event timeout.
+}
+
 ListenEventHandler::~ListenEventHandler(){
     LOG_ENTER_FUNC("default destructor.");
     LOG_LEAVE_FUNC("default destructor.");
@@ -16,13 +29,7 @@ ListenEventHandler::~ListenEventHandler(){
 
 void ListenEventHandler::init(){
     LOG_ENTER_FUNC("");
-    this->base = event_base_new();
     LOG_LEAVE_FUNC("");
-}
-
-void ListenEventHandler::setListenCallback(void (* cb)(evutil_socket_t fd, short event, void* arg), evutil_socket_t fd, void* arg){
-    this->listenEvent = event_new(this->base, fd, EV_READ|EV_PERSIST, cb, arg);
-    event_add(this->listenEvent, NULL);//set event timeout.
 }
 
 void ListenEventHandler::serve(){
