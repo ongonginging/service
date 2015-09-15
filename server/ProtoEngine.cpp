@@ -27,7 +27,7 @@ std::shared_ptr<ProtoEventHandler> getEventHandler(ProtoWorkThread* workThread){
 
 static void threadCtrlCb(evutil_socket_t fd, short event, void *arg){
     GLOBAL_LOG_ENTER_FUNC("");
-    //todo: figure out event is EV_READ, and no exception thrown.
+    //todo: figure out event is EV_READ.
     uint8_t op;
     while(-1 != read(fd, (void*)&op, 1)){}
     ProtoWorkThread* workThread = reinterpret_cast<ProtoWorkThread*>(arg);
@@ -39,7 +39,7 @@ static void threadCtrlCb(evutil_socket_t fd, short event, void *arg){
 
 void connCtrlCb(evutil_socket_t fd, short event, void *arg){
     GLOBAL_LOG_ENTER_FUNC("");
-    //todo: figure out event is EV_READ, and no exception thrown.
+    //todo: figure out event is EV_READ.
     uint8_t op;
     while(-1 != read(fd, (void*)&op, 1)){}
     ProtoWorkThread* workThread = reinterpret_cast<ProtoWorkThread*>(arg);
@@ -53,7 +53,7 @@ void connCtrlCb(evutil_socket_t fd, short event, void *arg){
 
 void connReadCb(evutil_socket_t fd, short event, void *arg){
     GLOBAL_LOG_ENTER_FUNC("");
-    //todo: figure out event is EV_READ, no exception thrown.
+    //todo: figure out event is EV_READ.
     GLOBAL_LOG_ENTER_FUNC("");
 }
 
@@ -139,10 +139,10 @@ void ProtoWorkThread::notify(std::shared_ptr<ITask> task){
     LOG_ENTER_FUNC("");
     log("task.use_count() = ", task.use_count());
     this->taskQueue.push(task);
+    log("task.use_count() = ", task.use_count());
     uint8_t op = 1;
     /* notify eventHandler. */
     int result = write(this->connCtrlChan[1], &op, 1);
-    log("write return value: ", result);
     if (result<=0){
         log("write this->connCtrlChan[1] failed. errno = ", errno);
     }else{

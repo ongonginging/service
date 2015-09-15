@@ -23,13 +23,13 @@ class ProtoEventHandler;
 class ConnCreateTask: public ITask {
     private:
         std::string className = "ConnCreateTask";
-        std::shared_ptr<ClientSocket> client;
+        ClientSocket* client;
         std::shared_ptr<ProtoWorkThread> workThread;
         
     public:
         ConnCreateTask(ClientSocket* client, const std::shared_ptr<ProtoWorkThread>& workThread){
             LOG_ENTER_FUNC("constructor");
-            this->client = std::shared_ptr<ClientSocket>(client);
+            this->client = client;
             this->workThread = workThread;
             LOG_LEAVE_FUNC("constructor");
         }
@@ -37,7 +37,7 @@ class ConnCreateTask: public ITask {
             LOG_ENTER_FUNC("destructor");
             LOG_LEAVE_FUNC("destructor");
         }
-        std::shared_ptr<ClientSocket> getClient(){
+        ClientSocket* getClient(){
             return this->client;
         }
         void run(){
@@ -50,12 +50,12 @@ class ConnCreateTask: public ITask {
 class ConnCloseTask: public ITask {
     private:
         std::string className = "ConnCloseTask";
-        std::shared_ptr<ClientSocket> client;
+        ClientSocket* client;
         std::shared_ptr<ProtoWorkThread> workThread;
     public:
         ConnCloseTask(ClientSocket* client, const std::shared_ptr<ProtoWorkThread>& workThread){
             LOG_ENTER_FUNC("constructor");
-            this->client = std::shared_ptr<ClientSocket>(client);
+            this->client = client;
             this->workThread = workThread;
             LOG_LEAVE_FUNC("constructor");
         }
@@ -63,7 +63,7 @@ class ConnCloseTask: public ITask {
             LOG_ENTER_FUNC("destructor");
             LOG_LEAVE_FUNC("destructor");
         }
-        std::shared_ptr<ClientSocket> getClient(){
+        ClientSocket* getClient(){
             return this->client;
         }
         void run(){

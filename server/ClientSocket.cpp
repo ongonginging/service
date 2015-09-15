@@ -19,7 +19,7 @@ ClientSocket::ClientSocket(void){
     this->reopen = false;
     this->closed = false;
     this->fd = -1;
-    LOG_ENTER_FUNC(" default constructor.");
+    LOG_LEAVE_FUNC(" default constructor.");
 }
 
 ClientSocket::ClientSocket(int fd){
@@ -106,7 +106,9 @@ int ClientSocket::close(void){
         LOG_LEAVE_FUNC("");
         return -1;
     }
-    this->closed = true;
+    if(this->fd < 0){
+        this->closed = true;
+    }
     LOG_LEAVE_FUNC("");
     return rv;
 }
