@@ -3,6 +3,8 @@
 
 class ITask{
     public:
+        ITask(){}
+        virtual ~ITask(){}
         virtual void run()=0;
 };
 

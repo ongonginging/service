@@ -135,13 +135,15 @@ void ProtoWorkThread::shutdown(){
     LOG_LEAVE_FUNC("");
 }
 
-void ProtoWorkThread::notify(std::shared_ptr<ITask>& task){
+void ProtoWorkThread::notify(std::shared_ptr<ITask> task){
     LOG_ENTER_FUNC("");
+    log("task.use_count() = ", task.use_count());
     this->taskQueue.push(task);
     uint8_t op = 1;
+    /* notify eventHandler. */
     int result = write(this->connCtrlChan[1], &op, 1);
     log("write return value: ", result);
-    if (result<=0){//send signal to eventHandler.
+    if (result<=0){
         log("write this->connCtrlChan[1] failed. errno = ", errno);
     }else{
         log("write this->connCtrlChan[1] successful.");
@@ -231,8 +233,9 @@ void ProtoEngine::notifyThread(const EVENT event, ClientSocket* cs){
             log("What are you 弄啥嘞!?");
             break;
     }
+    log("task.use_count() = ", task.use_count());
     this->workers[threadIndex]->notify(task);
+    log("task.use_count() = ", task.use_count());
     LOG_LEAVE_FUNC("");
 }
-
 

@@ -17,6 +17,7 @@
 ClientSocket::ClientSocket(void){
     LOG_ENTER_FUNC(" default constructor.");
     this->reopen = false;
+    this->closed = false;
     this->fd = -1;
     LOG_ENTER_FUNC(" default constructor.");
 }
@@ -42,6 +43,10 @@ ClientSocket::ClientSocket(int fd){
 
 ClientSocket::~ClientSocket(void){
     LOG_ENTER_FUNC(" default destructor.");
+    //todo: 抛出异常，用法错误
+    if(!this->closed){
+        this->close();
+    }
     LOG_LEAVE_FUNC(" default destructor.");
 }
 
@@ -101,6 +106,7 @@ int ClientSocket::close(void){
         LOG_LEAVE_FUNC("");
         return -1;
     }
+    this->closed = true;
     LOG_LEAVE_FUNC("");
     return rv;
 }

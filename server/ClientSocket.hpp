@@ -13,6 +13,7 @@ class ClientSocket{
     private:
         std::string className = "ClientSocket";
         bool reopen;
+        bool closed;
 
         socklen_t socklen;
         struct sockaddr addr;

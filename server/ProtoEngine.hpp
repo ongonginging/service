@@ -28,10 +28,14 @@ class ConnCreateTask: public ITask {
         
     public:
         ConnCreateTask(ClientSocket* client, const std::shared_ptr<ProtoWorkThread>& workThread){
+            LOG_ENTER_FUNC("constructor");
             this->client = std::shared_ptr<ClientSocket>(client);
             this->workThread = workThread;
+            LOG_LEAVE_FUNC("constructor");
         }
         ~ConnCreateTask(){
+            LOG_ENTER_FUNC("destructor");
+            LOG_LEAVE_FUNC("destructor");
         }
         std::shared_ptr<ClientSocket> getClient(){
             return this->client;
@@ -50,10 +54,14 @@ class ConnCloseTask: public ITask {
         std::shared_ptr<ProtoWorkThread> workThread;
     public:
         ConnCloseTask(ClientSocket* client, const std::shared_ptr<ProtoWorkThread>& workThread){
+            LOG_ENTER_FUNC("constructor");
             this->client = std::shared_ptr<ClientSocket>(client);
             this->workThread = workThread;
+            LOG_LEAVE_FUNC("constructor");
         }
         ~ConnCloseTask(){
+            LOG_ENTER_FUNC("destructor");
+            LOG_LEAVE_FUNC("destructor");
         }
         std::shared_ptr<ClientSocket> getClient(){
             return this->client;
@@ -80,7 +88,7 @@ class ProtoWorkThread:public std::enable_shared_from_this<ProtoWorkThread>{
         bool init();
         void serve();
         void shutdown();
-        void notify(std::shared_ptr<ITask>& task); //called by engine
+        void notify(std::shared_ptr<ITask> task);
         std::shared_ptr<ProtoWorkThread> getSharedPtr();
         bool hasTask();
         std::shared_ptr<ITask>& getTask();
