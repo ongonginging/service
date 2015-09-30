@@ -222,6 +222,7 @@ void ProtoEngine::notifyThread(const EVENT event, ClientSocket* cs){
     int threadIndex = cs->getFd()%this->workers.size();
     log("send client(socket fd) ", cs->getFd()," to thread(index of workers voector)", threadIndex);
     std::shared_ptr<ITask> task = NULL;
+    log("task.use_count() = ", task.use_count());
     switch(event){
         case CREATE_CONNECTION:
             task = std::shared_ptr<ITask>(dynamic_cast<ITask*>(new ConnCreateTask(cs, this->workers[threadIndex])));
@@ -230,7 +231,7 @@ void ProtoEngine::notifyThread(const EVENT event, ClientSocket* cs){
             task = std::shared_ptr<ITask>(dynamic_cast<ITask*>(new ConnCloseTask(cs, this->workers[threadIndex])));
             break;
         default:
-            log("What are you 弄啥嘞!?");
+            log("error: event", event, "not found!");
             break;
     }
     log("task.use_count() = ", task.use_count());
