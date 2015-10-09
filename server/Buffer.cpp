@@ -1,9 +1,10 @@
 
-#include<iostream>
+#include <stdlib.h>
+#include <iostream>
 
-#include<sys/types.h>
+#include <sys/types.h>
 
-#include"Buffer.hpp"
+#include "Buffer.hpp"
 
 Buffer::Buffer(){
     std::cout<<__func__<<" default constructor."<<std::endl;

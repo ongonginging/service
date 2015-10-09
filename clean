@@ -1,0 +1,6 @@
+#!/bin/sh
+
+make distclean
+rm -rf COPYING INSTALL aclocal.m4 autom4te.cache/ compile configure depcomp install-sh ltmain.sh missing
+rm -rf Makefile.in client/Makefile.in server/Makefile.in
+
